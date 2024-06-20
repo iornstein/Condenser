@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube Redirector</title>
+</head>
+<body>
+
+<section style="padding: 30px">
+    <p style="font-size:24px">Do you <em>really</em> want to go to youtube?</p>
+
+    <form>
+        <button id="enable-youtube">Yes</button>
+        <div>
+            <label for="youtube-duration">How long? (in minutes)</label>
+            <input id="youtube-duration" type="number" min="1" step="1" name="duration" required/>
+        </div>
+    </form>
+
+
+    <a id="youtube-link" href="" style="display:none">Enjoy your video: </a>
+
+</section>
+</body>
+<script type="module" src="youtube.js"></script>
+</html>
