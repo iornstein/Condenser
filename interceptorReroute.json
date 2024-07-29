@@ -5,11 +5,11 @@
     "action": {
       "type": "redirect",
       "redirect": {
-        "extensionPath": "/reddit.html"
+        "extensionPath": "/interceptor.html"
       }
     },
     "condition": {
-      "regexFilter": ".*reddit.com/?$",
+      "regexFilter": ".*(reddit.com|facebook.com)/?$",
       "resourceTypes": [
         "main_frame"
       ]

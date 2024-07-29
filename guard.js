@@ -9,6 +9,11 @@ const setWebsite = (websiteName, websiteLink) => {
 retrieveData("desiredUrl", (url) => {
         if (url.includes("reddit.com")) {
             setWebsite("reddit", "https://www.reddit.com?");
+        } else if (url.includes("facebook.com")) {
+            setWebsite("facebook", "https://www.facebook.com?");
+        }
+        else {
+            setWebsite("UNKNOWN WEBSITE!!", "")
         }
     }
 );
