@@ -14,12 +14,14 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * Switch to returning promises everywhere rather than having tasks as parameters
     * come up with better file name/separation for js functions
-- [ ] Standardize the reddit and youtube html pages
+- [ ] Standardize the reddit and youtube html pages (IN PROGRESS)
+- [ ] Add in facebook to be blocked just like reddit is
 - [ ] Make the web pages cleaner and prettier
 - [ ] Add some testing in
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
 - [ ] Identify a more limited set of permissions
+- [ ] What happens when you visit the pages when the website is NOT blocked?
 
 ##### Version 1.3
 - [ ] Genericize the reddit redirect. Have no more explicit mentions of reddit

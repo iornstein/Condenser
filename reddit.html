@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Save yourself time</title>
+    <title>Website Interceptor</title>
+    <link rel="stylesheet" href="css/interceptor.css">
 </head>
 <body>
-<section style="padding: 30px">
-    <h1>Reddit...</h1>
-    <p>Do you <em>really</em> want to go to reddit?</p>
-    <a href="https://www.reddit.com?">Yes!</a>
+
+<section class="body">
+    <p class="prompt">Do you <em>really</em> want to go to <span id="website-name"></span>?</p>
+    <a id="website-link" class="primary-button" style="display: none">Yes</a>
 </section>
 </body>
+<script type="module" src="guard.js"></script>
 </html>

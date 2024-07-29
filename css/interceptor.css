@@ -1,0 +1,20 @@
+a.primary-button, button.primary-button {
+    all: unset;
+    border: 1px solid darkblue;
+    border-radius: 3px;
+    background-color: lightblue;
+    font-size: 16px;
+    padding: 4px;
+    width: 80px;
+    text-align: center;
+    display: block;
+    cursor: pointer;"
+}
+
+section.body {
+    padding: 30px;
+}
+
+section.body .prompt {
+    font-size: 24px;
+}
