@@ -16,33 +16,96 @@ const SHOULD_DISABLE = "SHOULD_DISABLE";
 const DISABLED = "DISABLED";
 const ENABLED = "IS_ENABLED";
 
-export function triggerYoutubeToBeEnabled(enabledDurationInMilliseconds) {
-    storeData("youtubeStatus", SHOULD_ENABLE,
-        () => storeData("youtubeAllowedUntil", new Date().getTime() + enabledDurationInMilliseconds)
-    );
-}
+const enableKey = (website) => {
+    //TODO: generify
+    return "youtubeStatus";
+};
 
-export function triggerYoutubeToBeDisabled() {
-    storeData("youtubeStatus", SHOULD_DISABLE,
-        () => storeData("youtubeAllowedUntil", false)
-    );
-}
+const allowedUntilKey = (website) => {
+    //TODO: generify
+    return "youtubeAllowedUntil";
+};
 
-export function ifYoutubeShouldNoLongerBeEnabled(block) {
-    retrieveData("youtubeStatus", (state) => {
-        if(state === ENABLED){
-            retrieveData("youtubeAllowedUntil", (allowedUntil) => {
-                if (allowedUntil && new Date(allowedUntil) <= new Date()) {
-                    console.log("running block to no longer enable youtube");
-                    block();
+const rulesetIdFor = (website) => {
+    //TODO: generify
+    return "youtubeReroute"
+};
+
+const triggerEnabled = (website, enabledDurationInMilliseconds) => {
+    storeData(enableKey(website), SHOULD_ENABLE,
+        () => storeData(allowedUntilKey(website), new Date().getTime() + enabledDurationInMilliseconds)
+    );
+};
+
+const triggerDisabled = (website) => {
+    storeData(enableKey(website), SHOULD_DISABLE,
+        () => storeData(allowedUntilKey(website), false)
+    );
+};
+
+
+const ifWebsite = (website) => {
+    return {
+        shouldNoLongerBeEnabled: (block) => {
+            retrieveData(enableKey(website), (state) => {
+                if(state === ENABLED){
+                    retrieveData(allowedUntilKey(website), (allowedUntil) => {
+                        if (allowedUntil && new Date(allowedUntil) <= new Date()) {
+                            block();
+                        }
+                    })
                 }
-            })
+            });
+        }
+    }
+};
+
+export function listenToUpdateRedirectsFor(website) {
+    watchForWebsiteAccessChanges(website,(oldStatus, newStatus) => {
+        if (oldStatus === DISABLED || !oldStatus) {
+            if (newStatus === SHOULD_ENABLE) {
+                // enable access to website
+                chrome.declarativeNetRequest.updateEnabledRulesets({disableRulesetIds: [rulesetIdFor(website)]})
+                    .then(() => storeData(enableKey(website), ENABLED));
+            }
+        }
+        if (oldStatus === ENABLED) {
+            if (newStatus === SHOULD_DISABLE) {
+                // forbidding website
+                chrome.declarativeNetRequest.updateEnabledRulesets({enableRulesetIds: [rulesetIdFor(website)]})
+                    .then( () => storeData(enableKey(website), DISABLED));
+            }
         }
     });
 }
 
+export function watchForWebsiteAccessChanges(website, callback) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area !== "local") {
+            return;
+        }
+        if (!changes[enableKey(website)]) {
+            return;
+        }
+
+        callback(changes[enableKey(website)].oldValue, changes[enableKey(website)].newValue);
+    });
+}
+
+export function triggerYoutubeToBeEnabled(enabledDurationInMilliseconds) {
+    triggerEnabled("youtube", enabledDurationInMilliseconds);
+}
+
+export function triggerYoutubeToBeDisabled() {
+    triggerDisabled("youtube");
+}
+
+export function ifYoutubeShouldNoLongerBeEnabled(block) {
+    ifWebsite("youtube").shouldNoLongerBeEnabled(block);
+}
+
 export function watchForYoutubeBeingEnabled(callback) {
-    watchForYoutubeAccessChanges((oldStatus, newStatus) => {
+    watchForWebsiteAccessChanges("youtube", (oldStatus, newStatus) => {
         if (newStatus === ENABLED) {
             callback();
         }
@@ -50,34 +113,5 @@ export function watchForYoutubeBeingEnabled(callback) {
 }
 
 export function allowYoutubeAccessToAdjust() {
-    watchForYoutubeAccessChanges((oldStatus, newStatus) => {
-        console.log("youtube access did change!");
-        if (oldStatus === DISABLED || !oldStatus) {
-            if (newStatus === SHOULD_ENABLE) {
-                // need to enable access to youtube...
-                chrome.declarativeNetRequest.updateEnabledRulesets({disableRulesetIds: ["youtubeReroute"]})
-                    .then(() => storeData("youtubeStatus", ENABLED));
-            }
-        }
-        if (oldStatus === ENABLED) {
-            if (newStatus === SHOULD_DISABLE) {
-                console.log("we are updating declarative net request to FORBID YOUTUBE");
-                chrome.declarativeNetRequest.updateEnabledRulesets({enableRulesetIds: ["youtubeReroute"]})
-                    .then( () => storeData("youtubeStatus", DISABLED));
-            }
-        }
-    });
-}
-
-export function watchForYoutubeAccessChanges(callback) {
-    chrome.storage.onChanged.addListener((changes, area) => {
-        if (area !== "local") {
-            return;
-        }
-        if (!changes["youtubeStatus"]) {
-            return;
-        }
-
-        callback(changes["youtubeStatus"].oldValue, changes["youtubeStatus"].newValue);
-    });
+    listenToUpdateRedirectsFor("youtube");
 }

@@ -10,7 +10,11 @@ The current version is hyper-tailored to me. I may, in the future, make this mor
 ##Future Work
 Right now, the plugin works perfect for my uses cases. However, for the experience (ie joy of coding) I may iterate further on the plugin. I have an idea of a potential version 1.5 that is released as a downloadable plugin. A rough plan follows:
 
-##### Version 1.1 - 1.2
+##### Version 1.1
+- [ ] Make reddit time based as well
+- [ ] Fix timer bug
+
+##### Version 1.2
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * Switch to returning promises everywhere rather than having tasks as parameters
     * come up with better file name/separation for js functions
