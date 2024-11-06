@@ -13,6 +13,8 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 ##### Version 1.1
 - [ ] Make reddit time based as well
 - [ ] Fix timer bug
+- [x] Switch to typescript
+- [ ] Use more powerful typing throughout the project
 
 ##### Version 1.2
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
@@ -26,7 +28,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Consider saving the current url when said time expires.
 - [ ] Identify a more limited set of permissions
 - [ ] What happens when you visit the pages when the website is NOT blocked?
-- [ ] guard.js seems to need some love. I don't like the multiple if/else statements.
+- [ ] guard.ts seems to need some love. I don't like the multiple if/else statements.
 
 ##### Version 1.3
 - [ ] Genericize the reddit redirect. Have no more explicit mentions of reddit
