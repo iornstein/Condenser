@@ -1,19 +1,19 @@
 import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 import {
-    storeData,
     when,
     triggerDisabled,
-    allowWebsiteAccessToChange
+    storeDesiredUrl
 } from "./helpers";
+import {urlToBlock, Website} from "./website";
 
-allowWebsiteAccessToChange("YouTube");
+const websiteToLimitTimeTo : Website = "YouTube";
 
 chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParentedCallbackDetails) => {
-    storeData("desiredUrl", details.url);
+    return storeDesiredUrl(details.url);
 });
 
 chrome.webRequest.onBeforeRequest.addListener(
-    () => when("YouTube").shouldNoLongerBeEnabled(triggerDisabled),
-    {urls: ["*://www.youtube.com/*"]},
+    () => when(websiteToLimitTimeTo).shouldNoLongerBeEnabled(triggerDisabled),
+    {urls: [`*://${urlToBlock(websiteToLimitTimeTo)}/*`]},
     []
 );

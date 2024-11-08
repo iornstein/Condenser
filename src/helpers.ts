@@ -1,112 +1,64 @@
-type StoredValue = string | number | boolean;
+import {rulesetIdFor, Website} from "./website";
 
-export function storeData(key: string, value: StoredValue, action?: () => void) {
-    chrome.storage.local.set({[key]: value}).then(() => {
-        if (action) {
-            action()
-        }
+const storeWebsiteIsEnabled = (website: Website, enabledUntilTimeInMilliseconds: number) => {
+    return chrome.storage.local.set({
+        [enableKey(website)]: true,
+        [allowedUntilKey(website)]: enabledUntilTimeInMilliseconds
     });
+};
+
+const storeWebsiteIsDisabled = (website: Website) => {
+    return chrome.storage.local.set({[enableKey(website)]: false, [allowedUntilKey(website)]: false});
+};
+
+export const retrieveDesiredUrl = async (): Promise<string> => {
+    return chrome.storage.local.get("desiredUrl").then(data => data["desiredUrl"]);
+};
+
+export const storeDesiredUrl = (url: string) => {
+    return chrome.storage.local.set({desiredUrl: url});
+};
+
+type EnableableWebsite = { enabled: false } | { enabled: true, allowedUntil: number };
+const retrieveWebsiteIsEnabled = async (website: Website): Promise<EnableableWebsite> => {
+    return chrome.storage.local.get([enableKey(website), allowedUntilKey(website)])
+        .then(data => {
+            const enabled: boolean = data[enableKey(website)];
+            if (!enabled) {
+                return {enabled: false};
+            }
+            return {enabled, allowedUntil: data[allowedUntilKey(website)]};
+        });
 }
 
-export function retrieveData(key: string, onDataRead: (data: any) => void) {
-    chrome.storage.local.get(key).then(data => onDataRead(data[key]))
-}
+const enableKey = (website: Website) => `${website}Enabled`;
 
-const SHOULD_ENABLE = "SHOULD_ENABLE";
-const SHOULD_DISABLE = "SHOULD_DISABLE";
-const DISABLED = "DISABLED";
-const ENABLED = "IS_ENABLED";
+const allowedUntilKey = (website: Website) => `${website}AllowedUntil`;
 
-type WebsiteDisableStatus = typeof SHOULD_ENABLE | typeof SHOULD_DISABLE | typeof DISABLED | typeof ENABLED
-export type Website = "YouTube";
-
-export type HtmlPage = "youtube.html";
-
-export const websiteFor = (htmlPage: HtmlPage): Website => {
-    //TODO: generify
-    return "YouTube"
-}
-
-const enableKey = (website: Website) => {
-    //TODO: generify
-    return "youtubeStatus";
+export const triggerEnabled = async (website: Website, enabledDurationInMilliseconds: number) => {
+    return chrome.declarativeNetRequest.updateEnabledRulesets({disableRulesetIds: [rulesetIdFor(website)]})
+        .then(() => storeWebsiteIsEnabled(website, new Date().getTime() + enabledDurationInMilliseconds));
 };
 
-
-const allowedUntilKey = (website: Website) => {
-    //TODO: generify
-    return "youtubeAllowedUntil";
-};
-
-const rulesetIdFor = (website: Website) => {
-    //TODO: generify
-    return "youtubeReroute"
-};
-
-export const triggerEnabled = (website: Website, enabledDurationInMilliseconds: number) => {
-    storeData(enableKey(website), SHOULD_ENABLE,
-        () => storeData(allowedUntilKey(website), new Date().getTime() + enabledDurationInMilliseconds)
-    );
-};
-
-export const triggerDisabled = (website: Website) => {
-    storeData(enableKey(website), SHOULD_DISABLE,
-        () => storeData(allowedUntilKey(website), false)
-    );
+export const triggerDisabled = async (website: Website) => {
+    return chrome.declarativeNetRequest.updateEnabledRulesets({enableRulesetIds: [rulesetIdFor(website)]})
+        .then(() => storeWebsiteIsDisabled(website));
 };
 
 export const when = (website: Website) => {
     return {
         shouldNoLongerBeEnabled: (block: (website: Website) => void) => {
-            retrieveData(enableKey(website), (state) => {
-                if (state === ENABLED) {
-                    retrieveData(allowedUntilKey(website), (allowedUntil) => {
-                        if (allowedUntil && new Date(allowedUntil) <= new Date()) {
-                            block(website);
-                        }
-                    });
+            retrieveWebsiteIsEnabled(website).then((enableableWebsite: EnableableWebsite) => {
+                if (enableableWebsite.enabled) {
+                    const allowedUntil = enableableWebsite.allowedUntil;
+                    if (!allowedUntil) {
+                        throw new Error("woops! this shouldn't happen. Putting this error to debug later");
+                    }
+                    if (new Date(allowedUntil) <= new Date()) {
+                        block(website);
+                    }
                 }
             });
         }
     }
 };
-
-export function allowWebsiteAccessToChange(website: Website) {
-    watchForWebsiteAccessChanges(website, (oldStatus: WebsiteDisableStatus | null, newStatus: WebsiteDisableStatus) => {
-        if (oldStatus === DISABLED || !oldStatus) {
-            if (newStatus === SHOULD_ENABLE) {
-                // enable access to website
-                chrome.declarativeNetRequest.updateEnabledRulesets({disableRulesetIds: [rulesetIdFor(website)]})
-                    .then(() => storeData(enableKey(website), ENABLED));
-            }
-        }
-        if (oldStatus === ENABLED) {
-            if (newStatus === SHOULD_DISABLE) {
-                // forbidding website
-                chrome.declarativeNetRequest.updateEnabledRulesets({enableRulesetIds: [rulesetIdFor(website)]})
-                    .then(() => storeData(enableKey(website), DISABLED));
-            }
-        }
-    });
-}
-
-export function watchForWebsiteAccessChanges(website: Website, callback: (oldStoredValue: StoredValue, newStoredValue: StoredValue) => void) {
-    chrome.storage.onChanged.addListener((changes, area) => {
-        if (area !== "local") {
-            return;
-        }
-        if (!changes[enableKey(website)]) {
-            return;
-        }
-
-        callback(changes[enableKey(website)].oldValue, changes[enableKey(website)].newValue);
-    });
-}
-
-export const watchForWebsiteBeingEnabled = (website: Website, callback: () => void) => {
-    watchForWebsiteAccessChanges(website, (oldStatus: WebsiteDisableStatus, newStatus: WebsiteDisableStatus) => {
-        if (newStatus === ENABLED) {
-            callback();
-        }
-    });
-}

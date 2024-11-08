@@ -1,4 +1,4 @@
-import {retrieveData} from "./helpers";
+import {retrieveDesiredUrl} from "./helpers";
 
 type GuardedWebsite = "reddit" | "facebook" | "UNKNOWN WEBSITE!!";
 
@@ -9,14 +9,13 @@ const setWebsite = (website: GuardedWebsite, websiteLink: string) => {
     websiteAnchorTag.style.display = "block";
 };
 
-retrieveData("desiredUrl", (url) => {
-        if (url.includes("reddit.com")) {
-            setWebsite("reddit", "https://www.reddit.com?");
-        } else if (url.includes("facebook.com")) {
-            setWebsite("facebook", "https://www.facebook.com?");
-        }
-        else {
-            setWebsite("UNKNOWN WEBSITE!!", "")
-        }
+retrieveDesiredUrl().then( (url: string) => {
+    if (url.includes("reddit.com")) {
+        setWebsite("reddit", "https://www.reddit.com?");
+    } else if (url.includes("facebook.com")) {
+        setWebsite("facebook", "https://www.facebook.com?");
     }
-);
+    else {
+        setWebsite("UNKNOWN WEBSITE!!", "")
+    }
+});

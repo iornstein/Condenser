@@ -1,7 +1,8 @@
-import {HtmlPage, retrieveData, triggerEnabled, watchForWebsiteBeingEnabled, Website, websiteFor} from "./helpers";
+import {retrieveDesiredUrl, triggerEnabled} from "./helpers";
+import {LocalHtmlPage, Website, websiteFor} from "./website";
 
 const currentUrl = window.location.href;
-const htmlPage = currentUrl.substring(currentUrl.lastIndexOf('/') + 1) as HtmlPage;
+const htmlPage = currentUrl.substring(currentUrl.lastIndexOf('/') + 1) as LocalHtmlPage;
 const website: Website = websiteFor(htmlPage);
 
 document.querySelector<HTMLSpanElement>("span#website-name").innerText = website;
@@ -9,24 +10,21 @@ document.querySelector<HTMLSpanElement>("span#website-name").innerText = website
 const websiteLink = () :HTMLAnchorElement =>
     document.querySelector<HTMLAnchorElement>("a#website-link");
 
-retrieveData("desiredUrl", (url) => {
-        websiteLink().href = url;
-    }
-);
-
-watchForWebsiteBeingEnabled(website, () => {
-    websiteLink().style.display = "block";
-    retrieveData("desiredUrl", (url) => {
-            websiteLink().innerText = "Enjoy your video: " + url;
-        }
-    );
-});
-
 const millisecondsPerMinute = 1000*60;
 const websiteDurationInput = (): HTMLInputElement =>
     document.querySelector("input#link-duration");
-document.querySelector("form").addEventListener("submit", (event: SubmitEvent) => {
+
+const displayLinkToWebsite = async () => {
+    return retrieveDesiredUrl().then(url => {
+        const linkToWebsite = websiteLink();
+        linkToWebsite.style.display = "block";
+        linkToWebsite.innerText = "Enjoy your video: " + url;
+        linkToWebsite.href = url;
+    });
+};
+
+document.querySelector("form").addEventListener("submit", async (event: SubmitEvent) => {
     event.preventDefault();
     const minutes = parseInt(websiteDurationInput().value);
-    triggerEnabled(website, minutes*millisecondsPerMinute);
+    return triggerEnabled(website, minutes*millisecondsPerMinute).then(() => displayLinkToWebsite());
 });

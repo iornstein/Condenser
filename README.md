@@ -14,12 +14,12 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Make reddit time based as well
 - [ ] Fix timer bug
 - [x] Switch to typescript
-- [ ] Use more powerful typing throughout the project
+- [x] Use more powerful typing throughout the project
 
 ##### Version 1.2
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
-    * Switch to returning promises everywhere rather than having tasks as parameters
-    * come up with better file name/separation for js functions
+    * [x] Switch to returning promises everywhere rather than having tasks as parameters
+    * [ ] come up with better file name/separation for js functions
 - [ ] Standardize the reddit and youtube html pages (IN PROGRESS)
 - [x] Add in facebook to be blocked just like reddit is
 - [ ] Make the web pages cleaner and prettier
