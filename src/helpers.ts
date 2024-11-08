@@ -1,6 +1,6 @@
 type StoredValue = string | number | boolean;
 
-export function storeData(key: string, value: StoredValue, action?: () => void ) {
+export function storeData(key: string, value: StoredValue, action?: () => void) {
     chrome.storage.local.set({[key]: value}).then(() => {
         if (action) {
             action()
@@ -17,8 +17,15 @@ const SHOULD_DISABLE = "SHOULD_DISABLE";
 const DISABLED = "DISABLED";
 const ENABLED = "IS_ENABLED";
 
-type WebsiteDisableStatus = typeof SHOULD_ENABLE | typeof SHOULD_DISABLE | typeof  DISABLED | typeof ENABLED
-type Website = "youtube";
+type WebsiteDisableStatus = typeof SHOULD_ENABLE | typeof SHOULD_DISABLE | typeof DISABLED | typeof ENABLED
+export type Website = "YouTube";
+
+export type HtmlPage = "youtube.html";
+
+export const websiteFor = (htmlPage: HtmlPage): Website => {
+    //TODO: generify
+    return "YouTube"
+}
 
 const enableKey = (website: Website) => {
     //TODO: generify
@@ -36,37 +43,36 @@ const rulesetIdFor = (website: Website) => {
     return "youtubeReroute"
 };
 
-const triggerEnabled = (website: Website, enabledDurationInMilliseconds: number) => {
+export const triggerEnabled = (website: Website, enabledDurationInMilliseconds: number) => {
     storeData(enableKey(website), SHOULD_ENABLE,
         () => storeData(allowedUntilKey(website), new Date().getTime() + enabledDurationInMilliseconds)
     );
 };
 
-const triggerDisabled = (website: Website) => {
+export const triggerDisabled = (website: Website) => {
     storeData(enableKey(website), SHOULD_DISABLE,
         () => storeData(allowedUntilKey(website), false)
     );
 };
 
-
-const ifWebsite = (website: Website) => {
+export const when = (website: Website) => {
     return {
-        shouldNoLongerBeEnabled: (block: () => void) => {
+        shouldNoLongerBeEnabled: (block: (website: Website) => void) => {
             retrieveData(enableKey(website), (state) => {
-                if(state === ENABLED){
+                if (state === ENABLED) {
                     retrieveData(allowedUntilKey(website), (allowedUntil) => {
                         if (allowedUntil && new Date(allowedUntil) <= new Date()) {
-                            block();
+                            block(website);
                         }
-                    })
+                    });
                 }
             });
         }
     }
 };
 
-export function listenToUpdateRedirectsFor(website: Website) {
-    watchForWebsiteAccessChanges(website,(oldStatus: WebsiteDisableStatus | null, newStatus: WebsiteDisableStatus) => {
+export function allowWebsiteAccessToChange(website: Website) {
+    watchForWebsiteAccessChanges(website, (oldStatus: WebsiteDisableStatus | null, newStatus: WebsiteDisableStatus) => {
         if (oldStatus === DISABLED || !oldStatus) {
             if (newStatus === SHOULD_ENABLE) {
                 // enable access to website
@@ -78,7 +84,7 @@ export function listenToUpdateRedirectsFor(website: Website) {
             if (newStatus === SHOULD_DISABLE) {
                 // forbidding website
                 chrome.declarativeNetRequest.updateEnabledRulesets({enableRulesetIds: [rulesetIdFor(website)]})
-                    .then( () => storeData(enableKey(website), DISABLED));
+                    .then(() => storeData(enableKey(website), DISABLED));
             }
         }
     });
@@ -97,26 +103,10 @@ export function watchForWebsiteAccessChanges(website: Website, callback: (oldSto
     });
 }
 
-export function triggerYoutubeToBeEnabled(enabledDurationInMilliseconds: number) {
-    triggerEnabled("youtube", enabledDurationInMilliseconds);
-}
-
-export function triggerYoutubeToBeDisabled() {
-    triggerDisabled("youtube");
-}
-
-export function ifYoutubeShouldNoLongerBeEnabled(block: () => void) {
-    ifWebsite("youtube").shouldNoLongerBeEnabled(block);
-}
-
-export function watchForYoutubeBeingEnabled(callback: () => void) {
-    watchForWebsiteAccessChanges("youtube", (oldStatus: WebsiteDisableStatus, newStatus: WebsiteDisableStatus) => {
+export const watchForWebsiteBeingEnabled = (website: Website, callback: () => void) => {
+    watchForWebsiteAccessChanges(website, (oldStatus: WebsiteDisableStatus, newStatus: WebsiteDisableStatus) => {
         if (newStatus === ENABLED) {
             callback();
         }
     });
-}
-
-export function allowYoutubeAccessToAdjust() {
-    listenToUpdateRedirectsFor("youtube");
 }

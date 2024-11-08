@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <title>Website Interceptor</title>
     <link rel="stylesheet" href="../css/interceptor.css">
+    <script type="module" src="./timeLimitEnabledWebsite.js"></script>
 </head>
 <body>
 
 <section class="body">
-    <p class="prompt">Do you <em>really</em> want to go to youtube?</p>
+    <p class="prompt">Do you <em>really</em> want to go to <span id="website-name"></span>?</p>
     <form>
         <button class="primary-button">Yes</button>
         <div>
-            <label for="youtube-duration">How long? (in minutes)</label>
-            <input id="youtube-duration" type="number" min="1" step="1" name="duration" required/>
+            <label for="link-duration">How long? (in minutes)</label>
+            <input id="link-duration" type="number" min="1" step="1" name="duration" required/>
         </div>
     </form>
-    <a id="youtube-link" href="" style="display:none">Enjoy your video: </a>
+    <a id="website-link" href="" style="display:none">Enjoy your video: </a>
 
 </section>
 </body>
-<script type="module" src="./youtube.js"></script>
 </html>

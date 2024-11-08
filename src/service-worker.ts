@@ -1,19 +1,19 @@
 import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 import {
     storeData,
-    allowYoutubeAccessToAdjust,
-    ifYoutubeShouldNoLongerBeEnabled,
-    triggerYoutubeToBeDisabled
+    when,
+    triggerDisabled,
+    allowWebsiteAccessToChange
 } from "./helpers";
 
-allowYoutubeAccessToAdjust();
+allowWebsiteAccessToChange("YouTube");
 
 chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParentedCallbackDetails) => {
     storeData("desiredUrl", details.url);
 });
 
 chrome.webRequest.onBeforeRequest.addListener(
-    () => ifYoutubeShouldNoLongerBeEnabled(triggerYoutubeToBeDisabled),
+    () => when("YouTube").shouldNoLongerBeEnabled(triggerDisabled),
     {urls: ["*://www.youtube.com/*"]},
     []
 );
