@@ -8,20 +8,26 @@ The current version is hyper-tailored to me. I may, in the future, make this mor
 
 
 ##Future Work
-Right now, the plugin works perfect for my uses cases. However, for the experience (ie joy of coding) I may iterate further on the plugin. I have an idea of a potential version 1.5 that is released as a downloadable plugin. A rough plan follows:
+Right now, the plugin works perfect for my uses cases. However, for the experience (ie joy of coding) I may iterate further on the plugin. I have an idea of a potential version 1.6 that is released as a downloadable plugin. A rough plan follows:
 
 ##### Version 1.1
-- [ ] Make reddit time based as well
 - [ ] Fix timer bug
 - [x] Switch to typescript
 - [x] Use more powerful typing throughout the project
+- [x] Add in facebook to be blocked just like reddit is
+- [ ] Add in script to bump version
 
 ##### Version 1.2
+- [ ] Genericize the timed youtube redirect. Have no more explicit mentions of youtube scattered throughout. Allow dynamic creation of redirect pages from one source
+
+##### Version 1.3
+- [ ] Make reddit time based as well
+
+##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * [x] Switch to returning promises everywhere rather than having tasks as parameters
     * [ ] come up with better file name/separation for js functions
-- [ ] Standardize the reddit and youtube html pages (IN PROGRESS)
-- [x] Add in facebook to be blocked just like reddit is
+- [ ] Standardize the enableable and guarded html pages (IN PROGRESS)
 - [ ] Make the web pages cleaner and prettier
 - [ ] Add some testing in
 - [ ] Consider a popup after the time expires.
@@ -30,13 +36,10 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] What happens when you visit the pages when the website is NOT blocked?
 - [ ] guard.ts seems to need some love. I don't like the multiple if/else statements.
 
-##### Version 1.3
-- [ ] Genericize the reddit redirect. Have no more explicit mentions of reddit
-
-##### Version 1.4
-- [ ] Genericize the timed youtube redirect. Have no more explicit mentions of youtube
-
 ##### Version 1.5
+- [ ] Genericize the untimed guard. Have no explicit mentions of facebook
+
+##### Version 1.6
 - [ ] Research what it takes to deploy a plugin to app store
 - [ ] Create a Pipeline to deploy to app store?
 
