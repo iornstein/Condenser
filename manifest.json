@@ -1,6 +1,6 @@
 {
 	"name": "Condenser",
-	"version": "1.0.3",
+	"version": "{{version}}",
 	"manifest_version": 3,
 	"description": "Used only by me to help me with my website distractions",
 	"background": {

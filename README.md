@@ -15,7 +15,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Switch to typescript
 - [x] Use more powerful typing throughout the project
 - [x] Add in facebook to be blocked just like reddit is
-- [ ] Add in script to bump version
+- [x] Add in script to bump version
 
 ##### Version 1.2
 - [ ] Genericize the timed youtube redirect. Have no more explicit mentions of youtube scattered throughout. Allow dynamic creation of redirect pages from one source
