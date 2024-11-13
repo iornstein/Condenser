@@ -11,7 +11,7 @@ The current version is hyper-tailored to me. I may, in the future, make this mor
 Right now, the plugin works perfect for my uses cases. However, for the experience (ie joy of coding) I may iterate further on the plugin. I have an idea of a potential version 1.6 that is released as a downloadable plugin. A rough plan follows:
 
 ##### Version 1.1
-- [ ] Fix timer bug
+- [x] Fix timer bug -- I cannot reproduce this bug. It may have been fixed with the refactors.
 - [x] Switch to typescript
 - [x] Use more powerful typing throughout the project
 - [x] Add in facebook to be blocked just like reddit is
