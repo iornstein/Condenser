@@ -26,13 +26,13 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin({
-            patterns: [{from: ".", to: ".", context: "public"}]
+            patterns: [{from: ".", to: ".", context: "static"}]
         }),
         new CopyPlugin({
             patterns: [{
                 from: "manifest.json",
                 to: "manifest.json",
-                transform(content, absoluteFrom) {
+                transform(content) {
                     const template = content.toString();
                     return template.replace('{{version}}', version);
                 },
