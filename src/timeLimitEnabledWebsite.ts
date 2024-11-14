@@ -1,5 +1,7 @@
-import {retrieveDesiredUrl, triggerEnabled} from "./helpers";
+import {storeTimeToBlockAgain} from "./helpers";
 import {LocalHtmlPage, Website, websiteFor} from "./website";
+import {retrieveDesiredUrl} from "./storage";
+import {unblockWebsite} from "./block";
 
 const currentUrl = window.location.href;
 const htmlPage = currentUrl.substring(currentUrl.lastIndexOf('/') + 1) as LocalHtmlPage;
@@ -10,7 +12,6 @@ document.querySelector<HTMLSpanElement>("span#website-name").innerText = website
 const websiteLink = () :HTMLAnchorElement =>
     document.querySelector<HTMLAnchorElement>("a#website-link");
 
-const millisecondsPerMinute = 1000*60;
 const websiteDurationInput = (): HTMLInputElement =>
     document.querySelector("input#link-duration");
 
@@ -25,6 +26,7 @@ const displayLinkToWebsite = async () => {
 
 document.querySelector("form").addEventListener("submit", async (event: SubmitEvent) => {
     event.preventDefault();
-    const minutes = parseInt(websiteDurationInput().value);
-    return triggerEnabled(website, minutes*millisecondsPerMinute).then(() => displayLinkToWebsite());
+    const minutesToUnblockWebsiteFor = parseInt(websiteDurationInput().value);
+    return unblockWebsite(website).then(storeTimeToBlockAgain(minutesToUnblockWebsiteFor))
+        .then(displayLinkToWebsite);
 });

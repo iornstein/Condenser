@@ -1,4 +1,4 @@
-import {retrieveDesiredUrl} from "./helpers";
+import {retrieveDesiredUrl} from "./storage";
 
 type GuardedWebsite = "reddit" | "facebook" | "UNKNOWN WEBSITE!!";
 
