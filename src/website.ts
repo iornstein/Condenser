@@ -1,15 +1,12 @@
 
 export type Website = "YouTube";
-export type LocalHtmlPage = "youtube.html";
 
-export const websiteFor = (htmlPage: LocalHtmlPage): Website => {
-    return "YouTube"
-};
-
+//websiteUrl should be of form www.youtube.com, like no https? maybe check that later
 export const urlToBlock = (website: Website): string => {
     return "www.youtube.com";
-}
+};
 
-export const rulesetIdFor = (website: Website) => {
-    return "youtubeReroute"
+//TODO: make it work for more than just id 1. This fails if we have multiple dynamic
+export const ruleIdFor = (website: Website): number => {
+    return 3;
 };

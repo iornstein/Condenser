@@ -10,6 +10,10 @@ chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParente
     return storeDesiredUrl(details.url);
 });
 
+blockWebsite(websiteToLimitTimeTo).then( async website => {
+    console.info(`blocked: ${website}`);
+});
+
 chrome.webRequest.onBeforeRequest.addListener(
     () => when(websiteToLimitTimeTo).shouldNoLongerBeEnabled((website: Website) =>
         blockWebsite(website).then(storeWebsiteBlocked)),

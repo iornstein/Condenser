@@ -1,11 +1,9 @@
 import {storeTimeToBlockAgain} from "./helpers";
-import {LocalHtmlPage, Website, websiteFor} from "./website";
+import {Website} from "./website";
 import {retrieveDesiredUrl} from "./storage";
 import {unblockWebsite} from "./block";
 
-const currentUrl = window.location.href;
-const htmlPage = currentUrl.substring(currentUrl.lastIndexOf('/') + 1) as LocalHtmlPage;
-const website: Website = websiteFor(htmlPage);
+const website: Website = new URLSearchParams(window.location.search).get("website") as Website;
 
 document.querySelector<HTMLSpanElement>("span#website-name").innerText = website;
 
