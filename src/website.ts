@@ -8,5 +8,5 @@ export const urlToBlock = (website: Website): string => {
 
 //TODO: make it work for more than just id 1. This fails if we have multiple dynamic
 export const ruleIdFor = (website: Website): number => {
-    return 3;
+    return 1;
 };
