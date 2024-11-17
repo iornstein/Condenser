@@ -43,7 +43,6 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
     };
 }
 
-//TODO: see if a multi remove is actually necessary. I feel that the update should work just to remove one, but test later
 const removeDuplicateRulesFor = async (websiteRuleId: number): Promise<void> => {
     return chrome.declarativeNetRequest.getDynamicRules().then(async currentRules => {
         const duplicatedRuleIds = currentRules.map(rule => rule.id).filter(matches(websiteRuleId));

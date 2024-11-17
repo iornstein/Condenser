@@ -27,3 +27,7 @@ export const when = (websiteKey: string) => {
 export const produce = <T> (value: T) => () => value;
 
 export const matches = <T>(value: T) => (otherValue: T) => value === otherValue;
+
+export const isNotPresent = <T> (value: T) : boolean => {
+    return value === null || value === undefined || value === "";
+};

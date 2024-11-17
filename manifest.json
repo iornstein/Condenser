@@ -18,5 +18,8 @@
 	},
 	"permissions": ["webNavigation", "storage",
 		"declarativeNetRequest", "declarativeNetRequestFeedback", "webRequest", "declarativeNetRequestWithHostAccess"],
-	"host_permissions": ["<all_urls>"]
+	"host_permissions": ["<all_urls>"],
+	"action": {
+		"default_popup": "initializationError.html"
+	}
 }

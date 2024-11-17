@@ -18,15 +18,19 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Add in script to bump version
 
 ##### Version 1.2
-- [ ] Genericize the timed youtube redirect. Have no more explicit mentions of youtube scattered throughout. Allow dynamic creation of redirect pages from one source
+- [x] Genericize the timed youtube redirect. Have no more explicit mentions of youtube scattered throughout. Allow dynamic creation of redirect pages from one source
 
 ##### Version 1.3
 - [ ] Make reddit time based as well
+- [ ] Do better validation of default blocked websites, specifically URL. Report errors better
+- [ ] Handle id generation on behalf of users?
+- [ ] See if a multi remove is actually necessary when finding duplicate rules
 
 ##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * [x] Switch to returning promises everywhere rather than having tasks as parameters
     * [ ] come up with better file name/separation for js functions
+    * [ ] Split up helpers.ts
 - [ ] Standardize the enableable and guarded html pages (IN PROGRESS)
 - [ ] Make the web pages cleaner and prettier
 - [ ] Add some testing in
