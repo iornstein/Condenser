@@ -1,31 +1,34 @@
-import {ruleIdFor, urlToBlock, Website} from "./website";
+import {Website} from "./website";
+import {matches, produce} from "./helpers";
 import RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 import ResourceType = chrome.declarativeNetRequest.ResourceType;
 import Rule = chrome.declarativeNetRequest.Rule;
 
 export const blockWebsite = async (website: Website): Promise<Website> => {
-    return chrome.declarativeNetRequest.updateDynamicRules({
-        addRules: [timeLimitedBlockingRuleFor(website, ruleIdFor(website))]
-    }).then(_ignored => website);
+    return removeDuplicateRulesFor(website.ruleId)
+        .then(() =>
+            chrome.declarativeNetRequest.updateDynamicRules({addRules: [timeLimitedBlockingRuleFor(website)]}))
+        .then(produce(website));
 };
 
 export const unblockWebsite = async (website: Website): Promise<Website> => {
-    return chrome.declarativeNetRequest.updateDynamicRules({
-        removeRuleIds: [ruleIdFor(website)],
-    }).then( _ignored => website);
+    return unblockWebsiteByRuleId(website.ruleId).then(produce(website));
 };
 
-const timeLimitedBlockingRuleFor = (website: Website, ruleId: number): Rule => {
+const unblockWebsiteByRuleId = async (websiteRuleId: number): Promise<void> =>
+    chrome.declarativeNetRequest.updateDynamicRules({removeRuleIds: [websiteRuleId]});
+
+const timeLimitedBlockingRuleFor = (website: Website): Rule => {
     return {
-        id: ruleId,
+        id: website.ruleId,
         action: {
             type: RuleActionType.REDIRECT,
             redirect: {
-                "extensionPath": `/timeLimitedWebsite.html?website=${website}`
+                "extensionPath": `/timeLimitedWebsite.html?website=${website.key}`
             }
         },
         condition: {
-            regexFilter: `^https?://${urlToBlock(website)}/?(.*)`,
+            regexFilter: `^https?://${(website.url)}/?(.*)`,
             resourceTypes: [
                 ResourceType.MAIN_FRAME,
                 ResourceType.SUB_FRAME,
@@ -39,3 +42,11 @@ const timeLimitedBlockingRuleFor = (website: Website, ruleId: number): Rule => {
         }
     };
 }
+
+//TODO: see if a multi remove is actually necessary. I feel that the update should work just to remove one, but test later
+const removeDuplicateRulesFor = async (websiteRuleId: number): Promise<void> => {
+    return chrome.declarativeNetRequest.getDynamicRules().then(async currentRules => {
+        const duplicatedRuleIds = currentRules.map(rule => rule.id).filter(matches(websiteRuleId));
+        return Promise.all(duplicatedRuleIds.map(unblockWebsiteByRuleId)).then(produce(null));
+    });
+};

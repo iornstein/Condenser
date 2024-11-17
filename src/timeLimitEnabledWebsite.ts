@@ -1,11 +1,11 @@
 import {storeTimeToBlockAgain} from "./helpers";
-import {Website} from "./website";
-import {retrieveDesiredUrl} from "./storage";
+import {retrieveDesiredUrl, retrieveWebsite} from "./storage";
 import {unblockWebsite} from "./block";
 
-const website: Website = new URLSearchParams(window.location.search).get("website") as Website;
+const websiteKey: string = new URLSearchParams(window.location.search).get("website");
+const websitePromise = retrieveWebsite(websiteKey);
 
-document.querySelector<HTMLSpanElement>("span#website-name").innerText = website;
+document.querySelector<HTMLSpanElement>("span#website-name").innerText = websiteKey;
 
 const websiteLink = () :HTMLAnchorElement =>
     document.querySelector<HTMLAnchorElement>("a#website-link");
@@ -25,6 +25,6 @@ const displayLinkToWebsite = async () => {
 document.querySelector("form").addEventListener("submit", async (event: SubmitEvent) => {
     event.preventDefault();
     const minutesToUnblockWebsiteFor = parseInt(websiteDurationInput().value);
-    return unblockWebsite(website).then(storeTimeToBlockAgain(minutesToUnblockWebsiteFor))
+    return websitePromise.then(unblockWebsite).then(storeTimeToBlockAgain(minutesToUnblockWebsiteFor))
         .then(displayLinkToWebsite);
 });

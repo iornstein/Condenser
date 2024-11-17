@@ -1,12 +1,14 @@
 
-export type Website = "YouTube";
-
-//websiteUrl should be of form www.youtube.com, like no https? maybe check that later
-export const urlToBlock = (website: Website): string => {
-    return "www.youtube.com";
+export type Website = {
+    key: string,
+    ruleId: number,
+    url: string //should be of form www.youtube.com no protocol
 };
 
-//TODO: make it work for more than just id 1. This fails if we have multiple dynamic
-export const ruleIdFor = (website: Website): number => {
-    return 1;
+export type WebsiteWithBlocking = Website & {blockingStatus: BlockingStatus};
+
+export const YouTube: WebsiteWithBlocking = {
+    key: "YouTube", ruleId: 1, url: "www.youtube.com", blockingStatus: {blocked: true}
 };
+
+type BlockingStatus = ({ blocked: true} | { blocked:false, allowedUntil: number});

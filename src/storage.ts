@@ -1,4 +1,5 @@
-import {Website} from "./website";
+import {Website, WebsiteWithBlocking} from "./website";
+import {produce} from "./helpers";
 
 export const storeDesiredUrl = (url: string) =>
     chrome.storage.local.set({desiredUrl: url});
@@ -6,17 +7,18 @@ export const storeDesiredUrl = (url: string) =>
 export const retrieveDesiredUrl = async (): Promise<string> =>
     chrome.storage.local.get("desiredUrl").then(data => data["desiredUrl"]);
 
-export type BlockingStatus = { blocked: true } | { blocked:false, allowedUntil: number };
-
 export const storeWebsiteUnblockedUntil = (website: Website, enabledUntilTimeInMilliseconds: number) => {
-    const unblockedUntil: BlockingStatus = {blocked: false, allowedUntil: enabledUntilTimeInMilliseconds};
-    return chrome.storage.local.set({[website]: unblockedUntil});
+    const blockedWebsite: WebsiteWithBlocking = {...website, blockingStatus: {
+            blocked: false,
+            allowedUntil: enabledUntilTimeInMilliseconds
+        }};
+    return chrome.storage.local.set({[website.key]: blockedWebsite});
 };
 
-const blocked: BlockingStatus = {blocked: true};
-export const storeWebsiteBlocked = (website: Website) => {
-    return chrome.storage.local.set({[website]: blocked});
+export const storeWebsiteBlocked = (website: Website): Promise<Website> => {
+    const blockedWebsite: WebsiteWithBlocking = {...website, blockingStatus: {blocked: true}}
+    return chrome.storage.local.set({[website.key]: blockedWebsite}).then(produce(website));
 };
 
-export const retrieveWebsiteBlockedStatus = async (website: Website): Promise<BlockingStatus> =>
-    chrome.storage.local.get([website]).then(data => data[website]);
+export const retrieveWebsite = async (websiteKey: string): Promise<WebsiteWithBlocking> =>
+    chrome.storage.local.get([websiteKey]).then(data => data[websiteKey]);
