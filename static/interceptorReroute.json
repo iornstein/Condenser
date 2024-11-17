@@ -9,7 +9,7 @@
       }
     },
     "condition": {
-      "regexFilter": ".*(reddit.com|facebook.com)/?$",
+      "regexFilter": ".*(facebook.com)/?$",
       "resourceTypes": [
         "main_frame"
       ]

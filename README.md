@@ -21,7 +21,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Genericize the timed youtube redirect. Have no more explicit mentions of youtube scattered throughout. Allow dynamic creation of redirect pages from one source
 
 ##### Version 1.3
-- [ ] Make reddit time based as well
+- [x] Make reddit time based as well
 - [ ] Do better validation of default blocked websites, specifically URL. Report errors better
 - [ ] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules

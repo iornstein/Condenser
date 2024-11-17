@@ -1,6 +1,6 @@
 import {retrieveDesiredUrl} from "./storage";
 
-type GuardedWebsite = "reddit" | "facebook" | "UNKNOWN WEBSITE!!";
+type GuardedWebsite = "facebook" | "UNKNOWN WEBSITE!!";
 
 const setWebsite = (website: GuardedWebsite, websiteLink: string) => {
     document.getElementById("website-name").innerText = website;
@@ -10,9 +10,7 @@ const setWebsite = (website: GuardedWebsite, websiteLink: string) => {
 };
 
 retrieveDesiredUrl().then( (url: string) => {
-    if (url.includes("reddit.com")) {
-        setWebsite("reddit", "https://www.reddit.com?");
-    } else if (url.includes("facebook.com")) {
+    if (url.includes("facebook.com")) {
         setWebsite("facebook", "https://www.facebook.com?");
     }
     else {

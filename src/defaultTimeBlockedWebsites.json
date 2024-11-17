@@ -1,3 +1,4 @@
 [
-  {"key": "YouTube", "ruleId": 1, "url": "www.youtube.com"}
+  {"key": "YouTube", "ruleId": 1, "url": "www.youtube.com"},
+  {"key": "Reddit", "ruleId": 2, "url": "www.reddit.com"}
 ]
