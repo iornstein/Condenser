@@ -1,7 +1,6 @@
 export interface Failable<T> {
     mapSuccess: <S> (mapper: (input: T) => S) => Failable<S>
     handleFailure: (handler: (input: Error[]) => void) => void
-    failed: boolean
 }
 
 export const success = <T> (value: T): Failable<T> => {
@@ -25,7 +24,6 @@ export const join = <T> (entries: Failable<T>[]): Failable<T[]> => {
 };
 
 class Successful<T> implements Failable<T> {
-    failed =false;
     value: T
 
     constructor(value: T) {
@@ -42,7 +40,6 @@ class Successful<T> implements Failable<T> {
 }
 
 class Failed implements Failable<unknown> {
-    failed =true;
     errors: Error[]
 
     constructor(errors: Error[]) {

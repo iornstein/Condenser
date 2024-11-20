@@ -25,6 +25,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Do better validation of default blocked websites, specifically URL. Report errors better
 - [ ] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules
+- [ ] Handle the "website is blocked" rather than redirect: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
 
 ##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:

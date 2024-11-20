@@ -17,7 +17,7 @@ const displayLinkToWebsite = async () => {
     return retrieveDesiredUrl().then(url => {
         const linkToWebsite = websiteLink();
         linkToWebsite.style.display = "block";
-        linkToWebsite.innerText = "Enjoy your video: " + url;
+        linkToWebsite.innerText = "Enjoy your website: " + url;
         linkToWebsite.href = url;
     });
 };
