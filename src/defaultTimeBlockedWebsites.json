@@ -1,5 +1,6 @@
 [
   {"key": "YouTube", "ruleId": 1, "url": "www.youtube.com"},
   {"key": "Reddit", "ruleId": 2, "url": "www.reddit.com"},
-  {"key": "Chess.com", "ruleId": 3, "url": "www.chess.com"}
+  {"key": "Chess.com", "ruleId": 3, "url": "www.chess.com"},
+  {"key": "Facebook", "ruleId": 4, "url": "www.facebook.com"}
 ]

@@ -26,26 +26,22 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Do better validation of default blocked websites, specifically URL. Report errors better
 - [ ] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules
-- [ ] Handle the "website is blocked" rather than redirect: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
+- [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
+- [ ] Solve Chess.com early re-blocking bug
 
 ##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * [x] Switch to returning promises everywhere rather than having tasks as parameters
     * [ ] come up with better file name/separation for js functions
     * [ ] Split up helpers.ts
-- [ ] Standardize the enableable and guarded html pages (IN PROGRESS)
 - [ ] Make the web pages cleaner and prettier
 - [ ] Add some testing in
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
 - [ ] Identify a more limited set of permissions
 - [ ] What happens when you visit the pages when the website is NOT blocked?
-- [ ] guard.ts seems to need some love. I don't like the multiple if/else statements.
 
 ##### Version 1.5
-- [ ] Genericize the untimed guard. Have no explicit mentions of facebook
-
-##### Version 1.6
 - [ ] Research what it takes to deploy a plugin to app store
 - [ ] Create a Pipeline to deploy to app store?
 

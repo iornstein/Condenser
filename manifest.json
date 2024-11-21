@@ -7,15 +7,6 @@
 		"service_worker": "service-worker.js",
 		"type": "module"
 	},
-	"declarative_net_request": {
-		"rule_resources": [
-			{
-				"id": "ruleset",
-				"enabled": true,
-				"path": "interceptorReroute.json"
-			}
-		]
-	},
 	"permissions": ["webNavigation", "storage",
 		"declarativeNetRequest", "declarativeNetRequestFeedback", "webRequest", "declarativeNetRequestWithHostAccess"],
 	"host_permissions": ["<all_urls>"],

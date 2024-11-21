@@ -5,7 +5,6 @@ module.exports = {
     mode: "production",
     entry: {
         "service-worker": path.resolve(__dirname, "..", "src", "service-worker.ts"),
-        "guard": path.resolve(__dirname, "..", "src", "guard.ts"),
         "timeLimitEnabledWebsite": path.resolve(__dirname, "..", "src", "timeLimitEnabledWebsite.ts"),
     },
     output: {
