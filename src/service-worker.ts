@@ -15,7 +15,7 @@ const blockWebsiteWithPersistence = async (website: Website) =>
 const addListenerToReBlockWebsiteAfterElapsedTime = (website: Website) =>
     chrome.webRequest.onBeforeRequest.addListener(
         () => when(website.key).shouldNoLongerBeEnabled(blockWebsiteWithPersistence),
-        {urls: [`*://${(website.url)}/*`]},
+        {urls: [`${(website.url)}/*`]},
         []
     );
 

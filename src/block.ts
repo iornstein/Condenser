@@ -28,7 +28,7 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
             }
         },
         condition: {
-            regexFilter: `^https?://${(website.url)}/?(.*)`,
+            regexFilter: `^${(website.url)}/?(.*)`,
             resourceTypes: [
                 ResourceType.MAIN_FRAME,
                 ResourceType.SUB_FRAME,
@@ -41,7 +41,7 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
             ]
         }
     };
-}
+};
 
 const removeDuplicateRulesFor = async (websiteRuleId: number): Promise<void> => {
     return chrome.declarativeNetRequest.getDynamicRules().then(async currentRules => {

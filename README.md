@@ -6,8 +6,7 @@ The name "condenser" comes from a "condenser lens" as this is a focusing tool.
 
 The current version is hyper-tailored to me. I may, in the future, make this more customizable and public-ready.
 
-
-##Future Work
+## Future Work
 Right now, the plugin works perfect for my uses cases. However, for the experience (ie joy of coding) I may iterate further on the plugin. I have an idea of a potential version 1.6 that is released as a downloadable plugin. A rough plan follows:
 
 ##### Version 1.1
@@ -27,7 +26,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
-- [ ] Solve Chess.com early re-blocking bug
+- [ ] Duplicate rule Id bug resurfaced
 
 ##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:

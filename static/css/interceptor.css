@@ -1,4 +1,4 @@
-a.primary-button, button.primary-button {
+button.primary-button {
     all: unset;
     border: 1px solid darkblue;
     border-radius: 3px;
@@ -13,8 +13,7 @@ a.primary-button, button.primary-button {
 
 section.body {
     padding: 30px;
-}
-
-section.body .prompt {
-    font-size: 24px;
+    .prompt {
+        font-size: 24px;
+    }
 }

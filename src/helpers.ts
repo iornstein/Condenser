@@ -28,6 +28,10 @@ export const produce = <T> (value: T) => () => value;
 
 export const matches = <T>(value: T) => (otherValue: T) => value === otherValue;
 
-export const isNotPresent = <T> (value: T) : boolean => {
-    return value === null || value === undefined || value === "";
-};
+export const isPresent = <T> (value: T) => {
+    return value !== null && value !== undefined && value !== "";
+}
+
+export const isNumeric = <T> (value: T) => {
+    return !isNaN(Number(value));
+}
