@@ -2,7 +2,7 @@
 export type Website = {
     key: string,
     ruleId: number,
-    url: string //should be of form www.youtube.com no protocol
+    url: string
 };
 
 export type WebsiteWithBlocking = Website & {blockingStatus: BlockingStatus};

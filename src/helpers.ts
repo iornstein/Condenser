@@ -33,5 +33,5 @@ export const isPresent = <T> (value: T) => {
 }
 
 export const isNumeric = <T> (value: T) => {
-    return !isNaN(Number(value));
+    return  !isNaN(Number(value));
 }

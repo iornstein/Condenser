@@ -2,39 +2,48 @@ export interface Failable<T> {
     mapSuccess: <S> (mapper: (input: T) => S) => Failable<S>
     mapFailure: (mapper: (error: Error[]) => Error[]) => Failable<T>
     handleFailure: (handler: (input: Error[]) => void) => void
-    ensure: (invariant: boolean) => {
-        otherwiseFailWith: (error: Error) => Failable<T>
+    ensure: (invariant: Invariant) => {
+        otherwiseFailWith: (errorProducer: ErrorProducer) => Failable<T>
     }
-    and: (additionalRequirement: (value: T) => Failable<any>) => Failable<T>
 }
 
-export const success = <T> (value: T): Failable<T> => {
+type Invariant = (() => boolean) | boolean;
+type ErrorProducer = (errorCause?: Error) => Error;
+
+export const success = <T>(value: T): Failable<T> => {
     return new Successful(value);
 };
 
-export const fail = <T> (errors: Error[]): Failable<T> => {
+export const fail = <T>(errors: Error[]): Failable<T> => {
     return new Failed(errors);
 };
 
-export const attempt = <T> (failableProcess: () => T) => {
-    try{
-        const result = failableProcess();
-        return success(result);
-    } catch (error: any) {
-        if(error instanceof Error){
-            return fail([error]);
+const test = (invariant: Invariant) : "successful" | undefined | Error => {
+    try {
+        if (check(invariant)) {
+            return "successful";
         }
-        return fail([new Error(error + "")]);
+    } catch (error: any) {
+        return error;
     }
 }
 
-export const all = <T> (failables: Failable<T>[]): Failable<T[]> => {
+const check = (invariant: Invariant) =>
+    typeof invariant === "function" ? invariant() : invariant
+
+export const all = <T>(failables: Failable<T>[]): Failable<T[]> => {
     const errors = failables.flatMap(getErrors)
     if (errors.length !== 0) {
         return new Failed(errors);
     }
 
-    return success(failables.map(getSuccess));
+    const getSuccessValue = <T>(failable: Failable<T>) => {
+        let successValue: T;
+        failable.mapSuccess(success => successValue = success);
+        return successValue;
+    }
+
+    return success(failables.map(getSuccessValue));
 };
 
 class Successful<T> implements Failable<T> {
@@ -48,31 +57,24 @@ class Successful<T> implements Failable<T> {
         return new Successful(mapper(this.value));
     }
 
-    mapFailure<S>(mapper: (error: Error[]) => Error[]) {
+    mapFailure() {
         return this;
     }
 
-    handleFailure(){
+    handleFailure() {
         return;
     }
 
-    ensure(invariant: boolean) {
+    ensure(invariant: Invariant) {
         return {
-            otherwiseFailWith: (error: Error) => {
-                if(invariant) {
+            otherwiseFailWith: (errorProducer: ErrorProducer) => {
+                const trial = test(invariant);
+                if (trial === "successful") {
                     return this;
                 }
-                return fail([error]);
+                return fail([errorProducer(trial)]);
             }
         }
-    }
-
-    and(additionalRequirement: (value: T) => Failable<any>) {
-        const errors = getErrors(additionalRequirement(this.value));
-        if (errors.length != 0) {
-            return fail(errors);
-        }
-        return this;
     }
 }
 
@@ -87,40 +89,30 @@ class Failed implements Failable<unknown> {
         return this;
     }
 
-    mapFailure<S>(mapper: (error: Error[]) => Error[]) {
+    mapFailure(mapper: (error: Error[]) => Error[]) {
         return new Failed(mapper(this.errors));
     }
 
-    handleFailure(handler: (input: Error[]) => void){
+    handleFailure(handler: (input: Error[]) => void) {
         handler(this.errors);
     }
 
-    ensure<T>(invariant: boolean) {
+    ensure<T>(invariant: Invariant) {
         return {
-            otherwiseFailWith: (error: Error) => {
-                if(invariant) {
+            otherwiseFailWith: (errorProducer: ErrorProducer) => {
+                const trial = test(invariant);
+                if (trial === "successful") {
                     return this;
                 }
-                return fail(this.errors.concat([error]));
+                return fail(this.errors.concat([errorProducer(trial)]));
             }
         }
-    }
-
-    and<T>(additionalRequirement: (value: T) => Failable<any>) {
-        return this;
     }
 }
 
 //do not export, breaks Result convention
-const getErrors = <T> (failable: Failable<T>) => {
+const getErrors = <T>(failable: Failable<T>) => {
     let errors: Error[] = [];
     failable.handleFailure(actualErrors => errors = actualErrors)
     return errors;
-}
-
-//DO NOT EXPORT. Guarantees no type safety. Only can be used when we know failable is a Success
-const getSuccess = <T> (failable: Failable<T>) => {
-    let successValue: T;
-    failable.mapSuccess(success => successValue = success);
-    return successValue;
 }
