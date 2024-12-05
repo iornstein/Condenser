@@ -35,3 +35,8 @@ export const isPresent = <T> (value: T) => {
 export const isNumeric = <T> (value: T) => {
     return  !isNaN(Number(value));
 }
+
+export const pickOneFrom = <T> (list: T[]) => {
+    const randomIndex = Math.floor(Math.random() * list.length);
+    return list[randomIndex];
+}

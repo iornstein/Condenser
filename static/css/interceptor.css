@@ -16,4 +16,8 @@ section.body {
     .prompt {
         font-size: 24px;
     }
+
+    #encouragement {
+        font-size: 18px;
+    }
 }
