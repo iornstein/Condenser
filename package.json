@@ -1,10 +1,10 @@
 {
   "name": "condenser",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "This is a version 3 google chrome plugin to help minimize my distractions. Theoretically, you can use it too. Simply download this repo into a single folder, and [follow these instructions](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)",
   "main": "src/service-worker.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "rm -rf dist && webpack --config webpack/webpack.config.js",
     "patch": "npm run updateVersion -- patch",
     "minor": "npm run updateVersion -- minor",
@@ -16,7 +16,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/chrome": "^0.0.279",
+    "@types/jest": "^29.5.14",
     "copy-webpack-plugin": "^12.0.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
     "webpack": "^5.95.0",

@@ -32,8 +32,8 @@ export const isPresent = <T> (value: T) => {
     return value !== null && value !== undefined && value !== "";
 }
 
-export const isNumeric = <T> (value: T) => {
-    return  !isNaN(Number(value));
+export const isNumericIfPresent = <T> (value: T) => {
+    return  !isPresent(value) || !isNaN(Number(value));
 }
 
 export const pickOneFrom = <T> (list: T[]) => {

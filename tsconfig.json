@@ -1,6 +1,7 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
     "resolveJsonModule": true,
+    "esModuleInterop":  true
   },
 }

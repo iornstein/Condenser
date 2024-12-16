@@ -31,10 +31,18 @@ const test = (invariant: Invariant) : "successful" | undefined | Error => {
 const check = (invariant: Invariant) =>
     typeof invariant === "function" ? invariant() : invariant
 
+
+const ifFailedThen = (failureHandler : () => void)  => {
+    return <T> (failable: Failable<T>) => {
+        failable.handleFailure(failureHandler);
+    };
+};
+
 export const all = <T>(failables: Failable<T>[]): Failable<T[]> => {
-    const errors = failables.flatMap(getErrors)
-    if (errors.length !== 0) {
-        return new Failed(errors);
+    let atLeastOneErrored = false;
+    failables.forEach(ifFailedThen(() => atLeastOneErrored = true));
+    if (atLeastOneErrored) {
+        return new Failed(failables.flatMap(getErrors));
     }
 
     const getSuccessValue = <T>(failable: Failable<T>) => {
