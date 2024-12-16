@@ -22,6 +22,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 ##### Version 1.3
 - [x] Make reddit time based as well
 - [x] Make chess.com time based blocked
+- [x] Add initial tests
 - [ ] Do better validation of default blocked websites, specifically URL. Report errors better
 - [ ] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules
@@ -34,7 +35,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
     * [ ] come up with better file name/separation for js functions
     * [ ] Split up helpers.ts
 - [ ] Make the web pages cleaner and prettier
-- [ ] Add some testing in
+- [ ] Unit test everything
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
 - [ ] Identify a more limited set of permissions
