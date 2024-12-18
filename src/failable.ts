@@ -8,7 +8,7 @@ export interface Failable<T> {
 }
 
 type Invariant = (() => boolean) | boolean;
-type ErrorProducer = (errorCause?: Error) => Error;
+type ErrorProducer = (errorCause?: Error, source?: string) => Error;
 
 export const success = <T>(value: T): Failable<T> => {
     return new Successful(value);
@@ -80,7 +80,7 @@ class Successful<T> implements Failable<T> {
                 if (trial === "successful") {
                     return this;
                 }
-                return fail([errorProducer(trial)]);
+                return fail([errorProducer(trial, JSON.stringify(this.value))]);
             }
         }
     }

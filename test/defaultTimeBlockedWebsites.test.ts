@@ -77,8 +77,8 @@ describe('validatedTimeBlockedWebsites', () => {
     });
 
     it('should fail if any website has an invalid url specified', () => {
-        const errors = errorMessagesWhenValidating([{"key": "YouTube", ruleId: 1, "url": "xyz://abcd"}]);
+        const errors = errorMessagesWhenValidating([{"key": "YouTube", ruleId: 1, "url": "abcddf"}]);
         expect(errors).toHaveLength(1);
-        expect(errors[0]).toContain("Each blocked website must have a valid url")
+        expect(errors[0]).toContain("Each blocked website must have a valid url. Got an error: TypeError: Invalid URL");
     });
 });
