@@ -1,6 +1,6 @@
 import {Website} from "./website";
 import websiteJson from './defaultTimeBlockedWebsites.json';
-import {isNumericIfPresent, isPresent} from "./helpers";
+import {ifPresentThen, isNumeric, isPresent} from "./helpers";
 import {Failable, all, success} from "./failable";
 
 const ruleIdMissingError = () => new Error("Each default blocked website must have a rule id!");
@@ -25,20 +25,17 @@ export const validatedTimeBlockedWebsites = (websiteJson: WebsiteJson): Failable
         const validatedWebsite: Website = {...website, ruleId: Number(possibleRuleId)};
         return success(validatedWebsite)
             .ensure(isPresent(possibleRuleId)).otherwiseFailWith(ruleIdMissingError)
-            .ensure(isNumericIfPresent(possibleRuleId)).otherwiseFailWith(nonNumericRuleIdError)
+            .ensure(ifPresentThen(isNumeric, possibleRuleId)).otherwiseFailWith(nonNumericRuleIdError)
             .ensure(isUniquelyAddedTo(possibleRuleId, seenRuleIds)).otherwiseFailWith(duplicateRuleIdError)
             .ensure(isPresent(website.key)).otherwiseFailWith(websiteKeyMissingError)
             .ensure(isUniquelyAddedTo(website.key, seenWebsiteKeys)).otherwiseFailWith(duplicateWebsiteKeyError)
             .ensure(isPresent(website.url)).otherwiseFailWith(websiteUrlMissingError)
-            .ensure(isValidURLIfPresent(website.url)).otherwiseFailWith(websiteUrlInvalid)
+            .ensure(ifPresentThen(isValidURL, website.url)).otherwiseFailWith(websiteUrlInvalid)
     })));
 };
 
-const isValidURLIfPresent = (urlString: string) => {
+const isValidURL = (urlString: string) => {
     return () => {
-        if (!isPresent(urlString)) {
-            return true;
-        }
         const url = new URL(urlString);
         return url.protocol === "http:" || url.protocol === "https:";
     };
