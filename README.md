@@ -23,8 +23,8 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Make reddit time based as well
 - [x] Make chess.com time based blocked
 - [x] Add initial tests
-- [ ] Do better validation of default blocked websites, specifically URL. Report errors better
-- [ ] Handle id generation on behalf of users?
+- [x] Do better validation of default blocked websites, specifically URL. Report errors better
+- [x] Handle id generation on behalf of users?
 - [ ] See if a multi remove is actually necessary when finding duplicate rules
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
 - [ ] Duplicate rule Id bug resurfaced

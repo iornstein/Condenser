@@ -26,8 +26,6 @@ export const when = (websiteKey: string) => {
 
 export const produce = <T> (value: T) => () => value;
 
-export const matches = <T>(value: T) => (otherValue: T) => value === otherValue;
-
 export const isPresent = <T> (value: T) => {
     return value !== null && value !== undefined && value !== "";
 };
@@ -35,8 +33,6 @@ export const isPresent = <T> (value: T) => {
 export const ifPresentThen = <T,R> (condition: (value: T) => R, value: T) => {
     return !isPresent(value) || condition(value);
 };
-
-export const isNumeric = <T> (value: T) => !isNaN(Number(value));
 
 export const pickOneFrom = <T> (list: T[]) => {
     const randomIndex = Math.floor(Math.random() * list.length);

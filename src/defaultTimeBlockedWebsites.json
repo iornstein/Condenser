@@ -1,6 +1,6 @@
 [
-  {"key": "YouTube", "ruleId": 1, "url": "https://www.youtube.com"},
-  {"key": "Reddit", "ruleId": 2, "url": "https://www.reddit.com"},
-  {"key": "Chess.com", "ruleId": 3, "url": "https://www.chess.com"},
-  {"key": "Facebook", "ruleId": 4, "url": "https://www.facebook.com"}
+  {"key": "YouTube", "url": "https://www.youtube.com"},
+  {"key": "Reddit", "url": "https://www.reddit.com"},
+  {"key": "Chess.com", "url": "https://www.chess.com"},
+  {"key": "Facebook", "url": "https://www.facebook.com"}
 ]

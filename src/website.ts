@@ -1,7 +1,6 @@
 
 export type Website = {
     key: string,
-    ruleId: number,
     url: string
 };
 

@@ -1,26 +1,35 @@
 import {Website} from "./website";
-import {matches, produce} from "./helpers";
+import {produce} from "./helpers";
 import RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 import ResourceType = chrome.declarativeNetRequest.ResourceType;
 import Rule = chrome.declarativeNetRequest.Rule;
 
 export const blockWebsite = async (website: Website): Promise<Website> => {
-    return removeDuplicateRulesFor(website.ruleId)
-        .then(() =>
-            chrome.declarativeNetRequest.updateDynamicRules({addRules: [timeLimitedBlockingRuleFor(website)]}))
+    return chrome.declarativeNetRequest.updateSessionRules({addRules: [timeLimitedBlockingRuleFor(website)]})
         .then(produce(website));
 };
 
 export const unblockWebsite = async (website: Website): Promise<Website> => {
-    return unblockWebsiteByRuleId(website.ruleId).then(produce(website));
+    return unblockWebsiteByWebsiteUrl(website.url).then(produce(website));
 };
 
-const unblockWebsiteByRuleId = async (websiteRuleId: number): Promise<void> =>
-    chrome.declarativeNetRequest.updateDynamicRules({removeRuleIds: [websiteRuleId]});
+const unblockWebsiteByWebsiteUrl = async (websiteUrl: string): Promise<void> =>
+    chrome.declarativeNetRequest.getSessionRules().then(rules => {
+        const ruleIdsToRemove = rules.filter(rule => rule.condition.regexFilter === regexFilterFor(websiteUrl))
+            .map(rule => rule.id);
+        return chrome.declarativeNetRequest.updateSessionRules({removeRuleIds: ruleIdsToRemove});
+    })
+
+export const regexFilterFor = (websiteUrl: string) => `^${(websiteUrl)}/?(.*)`
+
+let counter = 1;
+const nextRuleId = () => {
+    return counter++;
+}
 
 const timeLimitedBlockingRuleFor = (website: Website): Rule => {
     return {
-        id: website.ruleId,
+         id: nextRuleId(),
         action: {
             type: RuleActionType.REDIRECT,
             redirect: {
@@ -28,7 +37,7 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
             }
         },
         condition: {
-            regexFilter: `^${(website.url)}/?(.*)`,
+            regexFilter: regexFilterFor(website.url),
             resourceTypes: [
                 ResourceType.MAIN_FRAME,
                 ResourceType.SUB_FRAME,
@@ -41,11 +50,4 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
             ]
         }
     };
-};
-
-const removeDuplicateRulesFor = async (websiteRuleId: number): Promise<void> => {
-    return chrome.declarativeNetRequest.getDynamicRules().then(async currentRules => {
-        const duplicatedRuleIds = currentRules.map(rule => rule.id).filter(matches(websiteRuleId));
-        return Promise.all(duplicatedRuleIds.map(unblockWebsiteByRuleId)).then(produce(null));
-    });
 };
