@@ -25,9 +25,9 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Add initial tests
 - [x] Do better validation of default blocked websites, specifically URL. Report errors better
 - [x] Handle id generation on behalf of users?
-- [ ] See if a multi remove is actually necessary when finding duplicate rules
+- [x] See if a multi remove is actually necessary when finding duplicate rules
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
-- [ ] Duplicate rule Id bug resurfaced
+- [?] Duplicate rule Id bug resurfaced
 
 ##### Version 1.4
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
@@ -47,6 +47,10 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 
 ##### Version Beyond
 - [ ] Make it work if you switch tabs etc (ie scope the desired urls by blocked domains)
+
+##### Other queries
+- It doesn't seem to work on button redirects? Or something. For example, if youtube/shorts is blocked and you go youtub
+ and click on a short, it is not blocked. But directly going to youtube shorts IS blocked
 
 
 

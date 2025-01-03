@@ -6,7 +6,13 @@ import Rule = chrome.declarativeNetRequest.Rule;
 
 export const blockWebsite = async (website: Website): Promise<Website> => {
     return chrome.declarativeNetRequest.updateSessionRules({addRules: [timeLimitedBlockingRuleFor(website)]})
-        .then(produce(website));
+        .then(produce(website),
+            (error: Error) => {
+                if (isDuplicatedIdError(error)) {
+                    return blockWebsite(website); //try again, the id will increment again
+                }
+                throw error;
+            });
 };
 
 export const unblockWebsite = async (website: Website): Promise<Website> => {
@@ -29,7 +35,7 @@ const nextRuleId = () => {
 
 const timeLimitedBlockingRuleFor = (website: Website): Rule => {
     return {
-         id: nextRuleId(),
+        id: nextRuleId(),
         action: {
             type: RuleActionType.REDIRECT,
             redirect: {
@@ -50,4 +56,8 @@ const timeLimitedBlockingRuleFor = (website: Website): Rule => {
             ]
         }
     };
+};
+
+const isDuplicatedIdError = (error: Error) => {
+    return error.message.includes("unique ID");
 };
