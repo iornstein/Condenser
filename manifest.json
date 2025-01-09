@@ -12,5 +12,8 @@
 	"host_permissions": ["<all_urls>"],
 	"action": {
 		"default_popup": "initializationError.html"
+	},
+	"externally_connectable": {
+		"matches": ["<all_urls>"]
 	}
 }
