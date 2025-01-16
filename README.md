@@ -26,12 +26,9 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [x] Do better validation of default blocked websites, specifically URL. Report errors better
 - [x] Handle id generation on behalf of users?
 - [x] See if a multi remove is actually necessary when finding duplicate rules
-- [?] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
-  -  I tried a of `"externally_connectable": { "matches": ["<all_urls>"] }` however I can't replicate bug easily, so not sure if this is the actual fix.
-  -  I can also try narrowing it down based on blocked websites? But would require re-build, unfortunately if changed
-- [?] Duplicate rule Id bug resurfaced
 
 ##### Version 1.4
+- [x] Switch to messages and timeout rather than waiting on web requests to block
 - [ ] The js files are a mess and poorly named. I need to make sensible break downs of the js files and do some refactors like:
     * [x] Switch to returning promises everywhere rather than having tasks as parameters
     * [ ] come up with better file name/separation for js functions
@@ -42,6 +39,8 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Consider saving the current url when said time expires.
 - [ ] Identify a more limited set of permissions
 - [ ] What happens when you visit the pages when the website is NOT blocked?
+- [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
+- [ ] Duplicate rule Id bug resurfaced
 
 ##### Version 1.5
 - [ ] Research what it takes to deploy a plugin to app store

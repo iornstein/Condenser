@@ -1,5 +1,5 @@
 import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
-import {when} from "./helpers";
+import {addMessageListener, Message} from "./message";
 import {Website} from "./website";
 import {storeDesiredUrl, storeWebsiteBlocked} from "./storage";
 import {blockWebsite} from "./block";
@@ -12,17 +12,19 @@ chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParente
 const blockWebsiteWithPersistence = async (website: Website) =>
     blockWebsite(website).then(storeWebsiteBlocked)
 
-const addListenerToReBlockWebsiteAfterElapsedTime = (website: Website) =>
-    chrome.webRequest.onBeforeRequest.addListener(
-        () => when(website.key).shouldNoLongerBeEnabled(blockWebsiteWithPersistence),
-        {urls: [`${(website.url)}/*`]},
-        []
-    );
+addMessageListener((message: Message) => {
+    switch (message.type) {
+        case "Reblock website":
+            setTimeout(() => blockWebsiteWithPersistence(message.website), message.minutesUntilReblock*60*1000);
+            break;
+        case "Unknown":
+            console.error("unknown message sent!");
+    }
+});
 
 initialTimeBlockedWebsites()
     .mapSuccess(websites => websites.forEach(websiteToLimitTimeTo =>
         blockWebsiteWithPersistence(websiteToLimitTimeTo)
-            .then(addListenerToReBlockWebsiteAfterElapsedTime)
     ))
     .handleFailure(error =>
         chrome.action.openPopup().then(() => {
