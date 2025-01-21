@@ -4,6 +4,7 @@ import {Website} from "./website";
 import {storeDesiredUrl, storeWebsiteBlocked} from "./storage";
 import {blockWebsite} from "./block";
 import {initialTimeBlockedWebsites} from "./defaultTimeBlockedWebsites";
+import {logError} from "./logger";
 
 chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParentedCallbackDetails) => {
     return storeDesiredUrl(details.url);
@@ -18,7 +19,7 @@ addMessageListener((message: Message) => {
             setTimeout(() => blockWebsiteWithPersistence(message.website), message.minutesUntilReblock*60*1000);
             break;
         case "Unknown":
-            console.error("unknown message sent!");
+            logError("unknown message sent!").then();
     }
 });
 
