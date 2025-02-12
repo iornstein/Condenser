@@ -20,3 +20,15 @@ export const pickOneFrom = <T> (list: T[]) => {
     const randomIndex = Math.floor(Math.random() * list.length);
     return list[randomIndex];
 }
+
+export const forEach = <T>(list: T[]) => {
+    return {
+        afterAnotherDo: <S>(process: (item: T) => Promise<S>) => {
+            let nextPromise: Promise<S| void> = Promise.resolve();
+            list.forEach(item => {
+                nextPromise = nextPromise.then(() => process(item));
+            });
+            return nextPromise;
+        }
+    }
+};
