@@ -1,6 +1,8 @@
 import {Website} from "../src/website";
 import {getFailureFrom, getValueFrom} from "./failableHelpers";
 
+jest.mock("../src/logger");
+
 describe('initialTimeBlockedWebsites', () => {
     it('should return the validated websites from the initial json', () => {
         jest.mock("../src/defaultTimeBlockedWebsites.json", () => ([{"key": "YouTube", "url": "https://www.youtube.com"}]));

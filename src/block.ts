@@ -3,19 +3,27 @@ import {produce} from "./helpers";
 import RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 import ResourceType = chrome.declarativeNetRequest.ResourceType;
 import Rule = chrome.declarativeNetRequest.Rule;
+import {logError, logInfo} from "./logger";
 
 export const blockWebsite = async (website: Website): Promise<Website> => {
+    await logInfo(`blocking website: ${website.key}`);
     return ruleIdsMatching(website.url)
-        .then(removeRuleIds =>
-            chrome.declarativeNetRequest.updateSessionRules({
-                addRules: [blockingRuleFor(website)],
-                removeRuleIds
-            })
+        .then(removeRuleIds => {
+            if (removeRuleIds.length > 0) {
+                logInfo(`we already had some rules matching the website: ${JSON.stringify(removeRuleIds)}`);
+            }
+            return chrome.declarativeNetRequest.updateSessionRules({
+                    addRules: [blockingRuleFor(website)],
+                    removeRuleIds
+                })
+            }
         ).then(produce(website),
             (error: Error) => {
                 if (isDuplicatedIdError(error)) {
+                    logInfo(`got duplicated id error: ${error} blocking website ${website.key}. Attempting to call blockWebsite again`);
                     return blockWebsite(website); //try again, the id will increment again
                 }
+                logError(`got error: ${error} blocking website ${website.key}`);
                 throw error;
             }
         );
@@ -43,6 +51,7 @@ const regexFilterFor = (websiteUrl: string) => `^(${websiteUrl})/?(.*)`
 
 let counter = 1;
 const nextRuleId = () => {
+    logInfo(`nextRuleId is: ${counter}`);
     return counter++;
 }
 
