@@ -7,8 +7,7 @@
 		"service_worker": "service-worker.js",
 		"type": "module"
 	},
-	"permissions": ["webNavigation", "storage",
-		"declarativeNetRequest", "declarativeNetRequestFeedback", "webRequest", "declarativeNetRequestWithHostAccess"],
+	"permissions": ["webNavigation", "storage", "declarativeNetRequest", "declarativeNetRequestFeedback"],
 	"host_permissions": ["<all_urls>"],
 	"action": {
 		"default_popup": "initializationError.html"

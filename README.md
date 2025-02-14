@@ -37,7 +37,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Unit test everything
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
-- [ ] Identify a more limited set of permissions
+- [x] Identify a more limited set of permissions
 - [ ] What happens when you visit the pages when the website is NOT blocked?
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
 - [ ] Duplicate rule Id bug resurfaced
