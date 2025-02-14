@@ -2,6 +2,7 @@ import {Website} from "./website";
 import {produce} from "./helpers";
 import Alarm = chrome.alarms.Alarm;
 import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
+import {logInfo} from "./logger";
 
 export type ScheduledMessage = ReBlockWebsiteMessage | UnknownMessage;
 type UnknownMessage = { type: "Unknown" };
@@ -16,9 +17,13 @@ export const addScheduledMessagedListener = (onMessageReceived: (message: Schedu
 };
 
 export const sendMessageToReBlockAfterMinutes = (minutesUntilReblock: number) =>
-    (website: Website) =>
-        sendScheduledMessage(`${ReBlockWebsitePrefix}${website.key}`, {delayInMinutes: minutesUntilReblock})
-            .then(produce(website));
+    (website: Website) => {
+        const date = new Date().getTime() + minutesUntilReblock * 60 * 1000;
+        return logInfo(`setting timeout to block website ${website.key} at ${date}`).then(() => {
+            return sendScheduledMessage(`${ReBlockWebsitePrefix}${website.key}`, {delayInMinutes: minutesUntilReblock})
+                .then(produce(website));
+        });
+    };
 
 const scheduledMessageFrom = (alarm: any): ScheduledMessage => {
     if (alarm && alarm.name.startsWith(ReBlockWebsite)) {
