@@ -6,6 +6,7 @@ module.exports = {
     entry: {
         "service-worker": path.resolve(__dirname, "..", "src", "service-worker.ts"),
         "timeLimitEnabledWebsite": path.resolve(__dirname, "..", "src", "timeLimitEnabledWebsite.ts"),
+        "info": path.resolve(__dirname, "..", "src", "info.ts"),
     },
     output: {
         path: path.join(__dirname, "../dist"),
