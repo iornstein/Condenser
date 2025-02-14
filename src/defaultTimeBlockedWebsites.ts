@@ -2,6 +2,7 @@ import {Website} from "./website";
 import websiteJson from './defaultTimeBlockedWebsites.json';
 import {ifPresentThen, isPresent} from "./helpers";
 import {Failable, all, success} from "./failable";
+import {logInfo} from "./logger";
 
 const withDetails = (message: string, cause: Error | undefined, source?: string): string => {
     return `${message}${cause ? ` Got an error: ${cause}` : ''}${source ? ` in: ${source}` : ''}`;
@@ -13,6 +14,7 @@ const websiteUrlMissingError = (cause: Error | undefined, source?: string) => ne
 const websiteUrlInvalid = (cause: Error | undefined, source?: string) => new Error(withDetails("Each blocked website must have a valid url.", cause, source));
 
 export const initialTimeBlockedWebsites = (): Failable<Website[]> => {
+    logInfo("fetching initial time blocked websites");
     return validatedTimeBlockedWebsites(websiteJson);
 }
 

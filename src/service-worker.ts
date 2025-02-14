@@ -3,7 +3,7 @@ import {Website} from "./website";
 import {storeWebsiteBlocked} from "./storage";
 import {blockWebsite} from "./block";
 import {initialTimeBlockedWebsites} from "./defaultTimeBlockedWebsites";
-import {logError} from "./logger";
+import {logError, logInfo} from "./logger";
 import {forEach} from "./helpers";
 
 const blockWebsiteWithPersistence = async (website: Website) =>
@@ -12,7 +12,14 @@ const blockWebsiteWithPersistence = async (website: Website) =>
 addMessageListener((message: Message) => {
     switch (message.type) {
         case "Reblock website":
-            setTimeout(() => blockWebsiteWithPersistence(message.website), message.minutesUntilReblock * 60 * 1000);
+            const date = new Date();
+            date.setMinutes(date.getMinutes() + message.minutesUntilReblock);
+            logInfo(`setting timeout to block website ${message.website.key} at ${date}`);
+            setTimeout(() => {
+                return logInfo(`time elapsed. Now blocking ${message.website.key}`).then(() => {
+                    return blockWebsiteWithPersistence(message.website);
+                });
+            }, message.minutesUntilReblock*60*1000);
             break;
         case "Unknown":
             logError("unknown message sent!").then();
@@ -20,8 +27,12 @@ addMessageListener((message: Message) => {
 });
 
 initialTimeBlockedWebsites()
-    .mapSuccess(websites => forEach(websites).afterAnotherDo(websiteToLimitTimeTo => {
-            return blockWebsiteWithPersistence(websiteToLimitTimeTo);
+    .mapSuccess(websites =>  forEach(websites)
+        .afterAnotherDo(websiteToLimitTimeTo => {
+            console.log("about to block website: " + websiteToLimitTimeTo.key);
+            const temp =  blockWebsiteWithPersistence(websiteToLimitTimeTo);
+            console.log("finished blocking website: " + websiteToLimitTimeTo.key + " any interleaving?");
+            return temp;
         }))
     .handleFailure(error =>
         chrome.action.openPopup().then(() => {
