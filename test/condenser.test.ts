@@ -8,12 +8,14 @@ import {initialize} from "../src/condenser";
 import {showInitializationErrorPopup} from "../src/popup";
 import {retrieveWebsite, storeWebsiteBlocked} from "../src/storage";
 import {addScheduledMessagedListener, ScheduledMessage} from "../src/message";
+import {logInfo} from "../src/logger";
 
 jest.mock("../src/defaultTimeBlockedWebsites");
 jest.mock("../src/message");
 jest.mock("../src/block");
 jest.mock("../src/popup");
 jest.mock("../src/storage");
+jest.mock("../src/logger");
 
 const mockInitialTimeBlockedWebsites = mockedType(initialTimeBlockedWebsites);
 const mockBlockWebsite = mockedType(blockWebsite);
@@ -21,6 +23,7 @@ const mockStoreWebsiteIsBlocked = mockedType(storeWebsiteBlocked);
 const mockShowInitializationErrorPopup = mockedType(showInitializationErrorPopup);
 const mockRetrieveWebsite = mockedType(retrieveWebsite);
 const mockAddScheduledMessagedListener = mockedType(addScheduledMessagedListener);
+const mockLogInfo = mockedType(logInfo);
 
 describe('Service Worker', () => {
 
@@ -40,6 +43,7 @@ describe('Service Worker', () => {
         })
         mockInitialTimeBlockedWebsites.mockReturnValue(success([]));
         jest.useFakeTimers();
+        mockLogInfo.mockResolvedValue();
     });
 
     describe('Loading initially time-blocked websites', () => {
@@ -146,8 +150,8 @@ describe('Service Worker', () => {
             const blockWebsiteMessage: ScheduledMessage = {type: "Re-block website", websiteKey: website.key};
             messageListener(blockWebsiteMessage);
 
-            expect(mockRetrieveWebsite).toHaveBeenCalledWith(blockWebsiteMessage.websiteKey);
             await jest.runAllTimersAsync(); //wait for all promises to resolve
+            expect(mockRetrieveWebsite).toHaveBeenCalledWith(blockWebsiteMessage.websiteKey);
             expect(mockBlockWebsite).toHaveBeenCalledWith(website);
             expect(mockStoreWebsiteIsBlocked).toHaveBeenCalledWith(website);
         });
@@ -161,8 +165,8 @@ describe('Service Worker', () => {
                 const blockWebsiteMessage: ScheduledMessage = {type: "Re-block website", websiteKey: ""};
                 messageListener(blockWebsiteMessage);
 
-                expect(mockRetrieveWebsite).toHaveBeenCalledWith(blockWebsiteMessage.websiteKey);
                 await jest.runAllTimersAsync();
+                expect(mockRetrieveWebsite).toHaveBeenCalledWith(blockWebsiteMessage.websiteKey);
                 expect(mockBlockWebsite).not.toHaveBeenCalled();
             });
 

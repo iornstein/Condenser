@@ -2,6 +2,11 @@ import {addScheduledMessagedListener, ScheduledMessage, sendMessageToReBlockAfte
 import {aSmallPositiveInteger, aWebsite} from "./generators.test";
 import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
 import Alarm = chrome.alarms.Alarm;
+import {logInfo} from "../src/logger";
+
+jest.mock("../src/logger");
+
+const mockLogInfo = logInfo as jest.MockedFn<typeof logInfo>;
 
 describe('message', () => {
     let mockAlarmCreate: jest.Mock;
@@ -9,6 +14,7 @@ describe('message', () => {
         mockAlarmCreate = jest.fn();
         mockAlarmCreate.mockResolvedValue(null);
         chrome.alarms.create = mockAlarmCreate;
+        mockLogInfo.mockResolvedValue(null);
     });
 
     describe('sendMessageToReBlockAfterMinutes', () => {
