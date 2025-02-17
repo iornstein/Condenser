@@ -5,19 +5,32 @@ import ResourceType = chrome.declarativeNetRequest.ResourceType;
 import Rule = chrome.declarativeNetRequest.Rule;
 
 export const blockWebsite = async (website: Website): Promise<Website> => {
-    return chrome.declarativeNetRequest.updateSessionRules({addRules: [timeLimitedBlockingRuleFor(website)]})
-        .then(produce(website),
+    return ruleIdsMatching(website.url)
+        .then(removeRuleIds =>
+            chrome.declarativeNetRequest.updateSessionRules({
+                addRules: [timeLimitedBlockingRuleFor(website)],
+                removeRuleIds
+            })
+        ).then(produce(website),
             (error: Error) => {
                 if (isDuplicatedIdError(error)) {
                     return blockWebsite(website); //try again, the id will increment again
                 }
                 throw error;
-            });
+            }
+        );
 };
 
 export const unblockWebsite = async (website: Website): Promise<Website> => {
     return unblockWebsiteByWebsiteUrl(website.url).then(produce(website));
 };
+
+
+const ruleIdsMatching = async (websiteUrl: string): Promise<number[]> => {
+    return chrome.declarativeNetRequest.getSessionRules().then(rules =>
+        rules.filter(rule => rule.condition.regexFilter === regexFilterFor(websiteUrl))
+            .map(rule => rule.id));
+}
 
 const unblockWebsiteByWebsiteUrl = async (websiteUrl: string): Promise<void> =>
     chrome.declarativeNetRequest.getSessionRules().then(rules => {
