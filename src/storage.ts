@@ -1,12 +1,6 @@
 import {Website, WebsiteWithBlocking} from "./website";
 import {produce} from "./helpers";
 
-export const storeDesiredUrl = (url: string) =>
-    chrome.storage.local.set({desiredUrl: url});
-
-export const retrieveDesiredUrl = async (): Promise<string> =>
-    chrome.storage.local.get("desiredUrl").then(data => data["desiredUrl"]);
-
 export const storeWebsiteUnblockedUntil = (website: Website, enabledUntilTimeInMilliseconds: number) => {
     const blockedWebsite: WebsiteWithBlocking = {...website, blockingStatus: {
             blocked: false,

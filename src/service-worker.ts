@@ -1,15 +1,10 @@
-import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 import {addMessageListener, Message} from "./message";
 import {Website} from "./website";
-import {storeDesiredUrl, storeWebsiteBlocked} from "./storage";
+import {storeWebsiteBlocked} from "./storage";
 import {blockWebsite} from "./block";
 import {initialTimeBlockedWebsites} from "./defaultTimeBlockedWebsites";
 import {logError} from "./logger";
 import {forEach} from "./helpers";
-
-chrome.webNavigation.onBeforeNavigate.addListener((details: WebNavigationParentedCallbackDetails) => {
-    return storeDesiredUrl(details.url);
-});
 
 const blockWebsiteWithPersistence = async (website: Website) =>
     blockWebsite(website).then(storeWebsiteBlocked)

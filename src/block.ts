@@ -8,7 +8,7 @@ export const blockWebsite = async (website: Website): Promise<Website> => {
     return ruleIdsMatching(website.url)
         .then(removeRuleIds =>
             chrome.declarativeNetRequest.updateSessionRules({
-                addRules: [timeLimitedBlockingRuleFor(website)],
+                addRules: [blockingRuleFor(website)],
                 removeRuleIds
             })
         ).then(produce(website),
@@ -46,13 +46,13 @@ const nextRuleId = () => {
     return counter++;
 }
 
-const timeLimitedBlockingRuleFor = (website: Website): Rule => {
+const blockingRuleFor = (website: Website): Rule => {
     return {
         id: nextRuleId(),
         action: {
             type: RuleActionType.REDIRECT,
             redirect: {
-                "extensionPath": `/timeLimitedWebsite.html?website=${website.key}`
+                regexSubstitution: `chrome-extension://${chrome.runtime.id}/timeLimitedWebsite.html?website=${website.key}&targetUrl=\\0`,
             }
         },
         condition: {

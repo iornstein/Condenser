@@ -38,9 +38,11 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
 - [x] Identify a more limited set of permissions
-- [ ] What happens when you visit the pages when the website is NOT blocked?
+- [ ] Remove webNavigation permission? I was using this before for to store desiredURL, depending on popup 
+      implementation I can remove this permission
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
 - [ ] Duplicate rule Id bug resurfaced
+- [x] Solve incorrect redirect bugs
 
 ##### Version 1.5
 - [ ] Research what it takes to deploy a plugin to app store

@@ -1,9 +1,11 @@
 import {pickOneFrom, storeTimeToBlockAgain} from "./helpers";
-import {retrieveDesiredUrl, retrieveWebsite} from "./storage";
+import {retrieveWebsite} from "./storage";
 import {unblockWebsite} from "./block";
 import {sendMessageToReblockAfterMinutes} from "./message";
 
-const websiteKey: string = new URLSearchParams(window.location.search).get("website");
+const urlSearchParams = new URLSearchParams(window.location.search);
+const websiteKey: string = urlSearchParams.get("website");
+const targetUrl: string = urlSearchParams.get("targetUrl");
 const websitePromise = retrieveWebsite(websiteKey);
 
 document.querySelector<HTMLSpanElement>("span#website-name").innerText = websiteKey;
@@ -23,19 +25,17 @@ const encouragement = () => {
 
 document.querySelector<HTMLParagraphElement>("p#encouragement").innerText = encouragement();
 
-const websiteLink = () :HTMLAnchorElement =>
+const websiteLink = (): HTMLAnchorElement =>
     document.querySelector<HTMLAnchorElement>("a#website-link");
 
 const websiteDurationInput = (): HTMLInputElement =>
     document.querySelector("input#link-duration");
 
 const displayLinkToWebsite = async () => {
-    return retrieveDesiredUrl().then(url => {
-        const linkToWebsite = websiteLink();
-        linkToWebsite.style.display = "block";
-        linkToWebsite.innerText = "Enjoy your website: " + url;
-        linkToWebsite.href = url;
-    });
+    const linkToWebsite = websiteLink();
+    linkToWebsite.style.display = "block";
+    linkToWebsite.innerText = "Enjoy your website: " + targetUrl;
+    linkToWebsite.href = targetUrl;
 };
 
 document.querySelector("form").addEventListener("submit", async (event: SubmitEvent) => {
