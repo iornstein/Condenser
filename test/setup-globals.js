@@ -1,0 +1,5 @@
+global.chrome = {
+    storage : {
+        local: {}
+    }
+};

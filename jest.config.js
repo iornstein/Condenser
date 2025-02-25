@@ -4,4 +4,5 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],
   },
+  setupFiles:  ["<rootDir>/test/setup-globals.js"]
 };
