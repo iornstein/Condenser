@@ -8,6 +8,14 @@ const websiteKey: string = urlSearchParams.get("website");
 const targetUrl: string = urlSearchParams.get("targetUrl");
 const websitePromise = retrieveWebsite(websiteKey);
 
+const endLoadingIndicator = () => {
+    document.querySelector<HTMLElement>(".primary-button").innerText = "Yes";
+};
+
+const displayLoadingIndicator = () => {
+    document.querySelector<HTMLElement>(".primary-button").innerText = "Loading ...";
+};
+
 document.querySelector<HTMLSpanElement>("span#website-name").innerText = websiteKey;
 
 const encouragement = () => {
@@ -32,6 +40,8 @@ const websiteDurationInput = (): HTMLInputElement =>
     document.querySelector("input#link-duration");
 
 const displayLinkToWebsite = async () => {
+    endLoadingIndicator();
+    document.querySelector<HTMLFormElement>("form").style.display = "none";
     const linkToWebsite = websiteLink();
     linkToWebsite.style.display = "block";
     linkToWebsite.innerText = "Enjoy your website: " + targetUrl;
@@ -40,6 +50,7 @@ const displayLinkToWebsite = async () => {
 
 document.querySelector("form").addEventListener("submit", async (event: SubmitEvent) => {
     event.preventDefault();
+    displayLoadingIndicator();
     const minutesToUnblockWebsiteFor = parseInt(websiteDurationInput().value);
     return websitePromise.then(unblockWebsite)
         .then(sendMessageToReblockAfterMinutes(minutesToUnblockWebsiteFor))
