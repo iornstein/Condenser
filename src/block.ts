@@ -39,7 +39,7 @@ const unblockWebsiteByWebsiteUrl = async (websiteUrl: string): Promise<void> =>
         return chrome.declarativeNetRequest.updateSessionRules({removeRuleIds: ruleIdsToRemove});
     })
 
-export const regexFilterFor = (websiteUrl: string) => `^(${websiteUrl})/?(.*)`
+const regexFilterFor = (websiteUrl: string) => `^(${websiteUrl})/?(.*)`
 
 let counter = 1;
 const nextRuleId = () => {
