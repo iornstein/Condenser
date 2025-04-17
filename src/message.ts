@@ -1,26 +1,32 @@
 import {Website} from "./website";
 import {produce} from "./helpers";
+import Alarm = chrome.alarms.Alarm;
+import AlarmCreateInfo = chrome.alarms.AlarmCreateInfo;
 
-export type Message = ReBlockWebsiteMessage | UnknownMessage;
+export type ScheduledMessage = ReBlockWebsiteMessage | UnknownMessage;
 type UnknownMessage = { type: "Unknown" };
-type ReBlockWebsiteMessage = { type: "Reblock website", website: Website, minutesUntilReblock: number };
+const ReBlockWebsite = "Re-block website";
+type ReBlockWebsiteMessage = { type: typeof ReBlockWebsite, websiteKey: string};
 
-export const addMessageListener = (onMessageReceived: (message: Message) => void) => {
-    chrome.runtime.onMessage.addListener((message: any) => onMessageReceived(messageFrom(message)));
+const ReBlockWebsitePrefix = `${ReBlockWebsite}*`;
+type ScheduledMessageName = `${typeof ReBlockWebsitePrefix}${string}` | "Unknown";
+
+export const addScheduledMessagedListener = (onMessageReceived: (message: ScheduledMessage) => void) => {
+    chrome.alarms.onAlarm.addListener((alarm: Alarm) => onMessageReceived(scheduledMessageFrom(alarm)));
 };
 
-export const sendMessageToReblockAfterMinutes = (minutesUntilReblock: number) =>
+export const sendMessageToReBlockAfterMinutes = (minutesUntilReblock: number) =>
     (website: Website) =>
-        sendMessage({type: "Reblock website", website, minutesUntilReblock})
-        .then(produce(website));
+        sendScheduledMessage(`${ReBlockWebsitePrefix}${website.key}`, {when: new Date().getTime() + minutesUntilReblock * 60 * 1000})
+            .then(produce(website));
 
-const messageFrom = (message: any): Message => {
-    if (message && message.type === "Reblock website") {
-        return message as ReBlockWebsiteMessage;
+const scheduledMessageFrom = (alarm: any): ScheduledMessage => {
+    if (alarm && alarm.name.startsWith(ReBlockWebsite)) {
+        return {type: ReBlockWebsite, websiteKey: alarm.name.split(ReBlockWebsitePrefix)[1]}
     }
     return {type: "Unknown"};
 };
 
-const sendMessage = (message: Message) => {
-    return chrome.runtime.sendMessage(message);
+const sendScheduledMessage = (scheduledMessageName: ScheduledMessageName, alarmInfo: AlarmCreateInfo) => {
+    return chrome.alarms.create(scheduledMessageName, alarmInfo)
 };

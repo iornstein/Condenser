@@ -1,7 +1,7 @@
 import {pickOneFrom, storeTimeToBlockAgain} from "./helpers";
 import {retrieveWebsite} from "./storage";
 import {unblockWebsite} from "./block";
-import {sendMessageToReblockAfterMinutes} from "./message";
+import {sendMessageToReBlockAfterMinutes} from "./message";
 
 const urlSearchParams = new URLSearchParams(window.location.search);
 const websiteKey: string = urlSearchParams.get("website");
@@ -53,7 +53,7 @@ document.querySelector("form").addEventListener("submit", async (event: SubmitEv
     displayLoadingIndicator();
     const minutesToUnblockWebsiteFor = parseInt(websiteDurationInput().value);
     return websitePromise.then(unblockWebsite)
-        .then(sendMessageToReblockAfterMinutes(minutesToUnblockWebsiteFor))
+        .then(sendMessageToReBlockAfterMinutes(minutesToUnblockWebsiteFor))
         .then(storeTimeToBlockAgain(minutesToUnblockWebsiteFor))
         .then(displayLinkToWebsite);
 });

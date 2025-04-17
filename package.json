@@ -1,6 +1,6 @@
 {
   "name": "condenser",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "description": "This is a version 3 google chrome plugin to help minimize my distractions. Theoretically, you can use it too. Simply download this repo into a single folder, and [follow these instructions](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked)",
   "main": "src/service-worker.ts",
   "scripts": {

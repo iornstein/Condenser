@@ -1,6 +1,6 @@
-import {addMessageListener, Message} from "./message";
+import {addScheduledMessagedListener, ScheduledMessage} from "./message";
 import {Website} from "./website";
-import {storeWebsiteBlocked} from "./storage";
+import {retrieveWebsite, storeWebsiteBlocked} from "./storage";
 import {blockWebsite} from "./block";
 import {initialTimeBlockedWebsites} from "./defaultTimeBlockedWebsites";
 import {logError} from "./logger";
@@ -9,13 +9,13 @@ import {forEach} from "./helpers";
 const blockWebsiteWithPersistence = async (website: Website) =>
     blockWebsite(website).then(storeWebsiteBlocked)
 
-addMessageListener((message: Message) => {
+addScheduledMessagedListener((message: ScheduledMessage) => {
     switch (message.type) {
-        case "Reblock website":
-            setTimeout(() => blockWebsiteWithPersistence(message.website), message.minutesUntilReblock * 60 * 1000);
+        case "Re-block website":
+            retrieveWebsite(message.websiteKey).then(blockWebsiteWithPersistence);
             break;
         case "Unknown":
-            logError("unknown message sent!").then();
+            logError("unknown scheduled message sent!").then();
     }
 });
 

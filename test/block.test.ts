@@ -4,6 +4,8 @@ import {anId, aRuleId, aWebsite} from "./generators.test";
 import Rule = chrome.declarativeNetRequest.Rule;
 import RuleActionType = chrome.declarativeNetRequest.RuleActionType;
 
+jest.mock("../src/logger");
+
 describe('block', () => {
     const mockUpdateSessionRules = jest.fn();
     const mockGetSessionRules = jest.fn();
