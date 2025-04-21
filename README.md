@@ -47,6 +47,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 ##### Version 1.5
 - [ ] Research what it takes to deploy a plugin to app store
 - [ ] Create a Pipeline to deploy to app store?
+- [ ] Integration Tests
 
 ##### Version Beyond
 - [ ] Make it work if you switch tabs etc (ie scope the desired urls by blocked domains)

@@ -9,7 +9,7 @@ const ReBlockWebsite = "Re-block website";
 type ReBlockWebsiteMessage = { type: typeof ReBlockWebsite, websiteKey: string};
 
 const ReBlockWebsitePrefix = `${ReBlockWebsite}*`;
-type ScheduledMessageName = `${typeof ReBlockWebsitePrefix}${string}` | "Unknown";
+type EncodedScheduledMessage = `${typeof ReBlockWebsitePrefix}${string}` | "Unknown";
 
 export const addScheduledMessagedListener = (onMessageReceived: (message: ScheduledMessage) => void) => {
     chrome.alarms.onAlarm.addListener((alarm: Alarm) => onMessageReceived(scheduledMessageFrom(alarm)));
@@ -17,7 +17,7 @@ export const addScheduledMessagedListener = (onMessageReceived: (message: Schedu
 
 export const sendMessageToReBlockAfterMinutes = (minutesUntilReblock: number) =>
     (website: Website) =>
-        sendScheduledMessage(`${ReBlockWebsitePrefix}${website.key}`, {when: new Date().getTime() + minutesUntilReblock * 60 * 1000})
+        sendScheduledMessage(`${ReBlockWebsitePrefix}${website.key}`, {delayInMinutes: minutesUntilReblock})
             .then(produce(website));
 
 const scheduledMessageFrom = (alarm: any): ScheduledMessage => {
@@ -27,6 +27,6 @@ const scheduledMessageFrom = (alarm: any): ScheduledMessage => {
     return {type: "Unknown"};
 };
 
-const sendScheduledMessage = (scheduledMessageName: ScheduledMessageName, alarmInfo: AlarmCreateInfo) => {
-    return chrome.alarms.create(scheduledMessageName, alarmInfo)
+const sendScheduledMessage = (encodedScheduledMessage: EncodedScheduledMessage, alarmInfo: AlarmCreateInfo) => {
+    return chrome.alarms.create(encodedScheduledMessage, alarmInfo)
 };

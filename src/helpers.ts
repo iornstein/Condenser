@@ -32,3 +32,5 @@ export const forEach = <T>(list: T[]) => {
         }
     }
 };
+
+export const now = () => now();

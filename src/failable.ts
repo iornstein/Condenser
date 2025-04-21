@@ -40,7 +40,8 @@ const ifFailedThen = (failureHandler : () => void)  => {
 
 export const all = <T>(failables: Failable<T>[]): Failable<T[]> => {
     let atLeastOneErrored = false;
-    failables.forEach(ifFailedThen(() => atLeastOneErrored = true));
+    const recordThatOneFailed = () => atLeastOneErrored = true;
+    failables.forEach(ifFailedThen(recordThatOneFailed));
     if (atLeastOneErrored) {
         return new Failed(failables.flatMap(getErrors));
     }

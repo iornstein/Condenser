@@ -20,6 +20,8 @@ export const aWebsite: Generator<Website> = generateUsing(() => {
 
 export const anId = generateUsing(() => randomIntBetween(10000000, 99999999));
 
+export const aSmallPositiveInteger = () => randomIntBetween(1, 10)
+
 const aUrl = generateUsing(() => `https://wwww.${aDomain()}.${aSubDomain()}`)
 
 

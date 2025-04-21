@@ -20,9 +20,7 @@ addScheduledMessagedListener((message: ScheduledMessage) => {
 });
 
 initialTimeBlockedWebsites()
-    .mapSuccess(websites => forEach(websites).afterAnotherDo(websiteToLimitTimeTo => {
-            return blockWebsiteWithPersistence(websiteToLimitTimeTo);
-        }))
+    .mapSuccess(websites => forEach(websites).afterAnotherDo(blockWebsiteWithPersistence))
     .handleFailure(error =>
         chrome.action.openPopup().then(() => {
             const errorMessages = error.map((error: Error) => error.message).join("\n");
