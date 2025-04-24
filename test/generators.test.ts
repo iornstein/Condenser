@@ -22,6 +22,10 @@ export const anId = generateUsing(() => randomIntBetween(10000000, 99999999));
 
 export const aSmallPositiveInteger = () => randomIntBetween(1, 10)
 
+export const anError = () => new Error(randomShortString())
+
+export const aBoolean = () => Math.random() < 0.5;
+
 const aUrl = generateUsing(() => `https://wwww.${aDomain()}.${aSubDomain()}`)
 
 

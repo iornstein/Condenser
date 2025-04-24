@@ -26,7 +26,7 @@ const test = (invariant: Invariant) : "successful" | undefined | Error => {
     } catch (error: any) {
         return error;
     }
-}
+};
 
 const check = (invariant: Invariant) =>
     typeof invariant === "function" ? invariant() : invariant
@@ -50,7 +50,7 @@ export const all = <T>(failables: Failable<T>[]): Failable<T[]> => {
         let successValue: T;
         failable.mapSuccess(success => successValue = success);
         return successValue;
-    }
+    };
 
     return success(failables.map(getSuccessValue));
 };
@@ -83,7 +83,7 @@ class Successful<T> implements Failable<T> {
                 }
                 return fail([errorProducer(trial, JSON.stringify(this.value))]);
             }
-        }
+        };
     }
 }
 
@@ -124,4 +124,4 @@ const getErrors = <T>(failable: Failable<T>) => {
     let errors: Error[] = [];
     failable.handleFailure(actualErrors => errors = actualErrors)
     return errors;
-}
+};
