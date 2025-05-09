@@ -1,14 +1,23 @@
-import {Website} from "../src/website";
+import {Website, WebsiteWithBlocking} from "../src/website";
 
 const generateUsing = <T> (generator: () => T): Generator<T> => {
+    const valueBesides = (excludeList: T[]) => {
+        let possibleValue = generator();
+        while (excludeList.includes(possibleValue)) {
+            possibleValue = generator();
+        }
+        return possibleValue;
+    }
     return {
         new: generator,
-        besides: (...excludeList: T[]) => {
-            let possibleValue = generator();
-            while (excludeList.includes(possibleValue)) {
-                possibleValue = generator();
+        besides: (...excludeList: T[]) => valueBesides(excludeList),
+        smallUniqueList: () => {
+            const listSize = randomIntBetween(1, 4);
+            const listToReturn: T[] = [];
+            while (listToReturn.length < listSize) {
+                listToReturn.push(valueBesides(listToReturn));
             }
-            return possibleValue;
+            return listToReturn;
         }
     }
 };
@@ -17,6 +26,10 @@ export const aRuleId = generateUsing(() => randomIntBetween(1, 100));
 export const aWebsite: Generator<Website> = generateUsing(() => {
    return {key: randomShortString(), url: aUrl.new()}
 });
+
+export const anUnblockedWebsite: Generator<WebsiteWithBlocking> = generateUsing(() => {
+    return {...aWebsite.new(), blockingStatus: {blocked: false, allowedUntil: 2000000000000}}
+})
 
 export const anId = generateUsing(() => randomIntBetween(10000000, 99999999));
 
@@ -46,7 +59,8 @@ const randomIntBetween = (minInclusive: number, maxInclusive: number) => {
 type Generator<T> =
     {
         new: () => T,
-        besides: (...excludeList: T[]) => T
+        besides: (...excludeList: T[]) => T,
+        smallUniqueList: () => T[]
     };
 
 describe('', () => { it('', () => {})});

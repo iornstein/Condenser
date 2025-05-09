@@ -43,6 +43,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
 - [ ] Handle the "website is blocked" rather than redirecting bug: perhaps look at [this link](https://stackoverflow.com/questions/38428586/open-chrome-extension-in-html)
 - [ ] Duplicate rule Id bug resurfaced
 - [x] Solve incorrect redirect bugs
+- [ ] Display error when re-blocking fails (just like on initialization?)
 
 ##### Version 1.5
 - [ ] Research what it takes to deploy a plugin to app store

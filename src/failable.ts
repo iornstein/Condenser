@@ -1,7 +1,7 @@
 export interface Failable<T> {
     mapSuccess: <S> (mapper: (input: T) => S) => Failable<S>
     mapFailure: (mapper: (error: Error[]) => Error[]) => Failable<T>
-    handleFailure: (handler: (input: Error[]) => void) => void
+    handleFailure: (handler: (input: Error[]) => void) => Failable<T>
     ensure: (invariant: Invariant) => {
         otherwiseFailWith: (errorProducer: ErrorProducer) => Failable<T>
     }
@@ -63,7 +63,12 @@ class Successful<T> implements Failable<T> {
     }
 
     mapSuccess<S>(mapper: (input: T) => S) {
-        return new Successful(mapper(this.value));
+        try {
+            return new Successful(mapper(this.value));
+        }
+        catch (error) {
+            return new Failed([error]);
+        }
     }
 
     mapFailure() {
@@ -71,7 +76,7 @@ class Successful<T> implements Failable<T> {
     }
 
     handleFailure() {
-        return;
+        return this;
     }
 
     ensure(invariant: Invariant) {
@@ -104,6 +109,7 @@ class Failed implements Failable<unknown> {
 
     handleFailure(handler: (input: Error[]) => void) {
         handler(this.errors);
+        return this;
     }
 
     ensure<T>(invariant: Invariant) {

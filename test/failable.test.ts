@@ -18,6 +18,16 @@ describe('failable', () => {
                 newFailable.mapSuccess(successMapper);
                 expect(successMapper).toHaveBeenCalledWith(transformedValue);
             });
+
+            it('should return an error if the mapper fails', () => {
+                const successMapper = jest.fn();
+                const thrownError = anError();
+                successMapper.mockImplementation(() => {throw thrownError});
+                const newFailable = failable.mapSuccess(successMapper);
+                const failureHandler = jest.fn();
+                newFailable.handleFailure(failureHandler);
+                expect(failureHandler).toHaveBeenCalledWith([thrownError]);
+            });
         });
 
         describe('on a failure', () => {
