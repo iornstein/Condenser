@@ -5,6 +5,7 @@ global.chrome = {
     alarms : {
         onAlarm: {}
     },
+    action : {},
     declarativeNetRequest : {
         RuleActionType: {
             REDIRECT: "REDIRECT"

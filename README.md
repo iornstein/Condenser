@@ -34,7 +34,7 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
     * [ ] come up with better file name/separation for js functions
     * [ ] Split up helpers.ts
 - [ ] Make the web pages cleaner and prettier
-- [ ] Unit test everything
+- [x] Unit test everything
 - [ ] Consider a popup after the time expires.
 - [ ] Consider saving the current url when said time expires.
 - [x] Identify a more limited set of permissions
