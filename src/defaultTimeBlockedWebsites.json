@@ -2,5 +2,6 @@
   {"key": "YouTube", "url": "https://www.youtube.com"},
   {"key": "Reddit", "url": "https://www.reddit.com"},
   {"key": "Chess.com", "url": "https://www.chess.com"},
-  {"key": "Facebook", "url": "https://www.facebook.com"}
+  {"key": "Facebook", "url": "https://www.facebook.com"},
+  {"key": "Sudoku Pad", "url": "https://sudokupad.app/"}
 ]
