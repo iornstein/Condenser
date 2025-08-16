@@ -3,14 +3,15 @@ import websiteJson from './defaultTimeBlockedWebsites.json';
 import {ifPresentThen, isPresent} from "./helpers";
 import {Failable, all, success} from "./failable";
 
-const withDetails = (message: string, cause: Error | undefined, source?: string): string => {
-    return `${message}${cause ? ` Got an error: ${cause}` : ''}${source ? ` in: ${source}` : ''}`;
-}
+const errorProducerWithPrefix = (details: string) => (cause: Error | undefined, source?: string) => {
+    const message = `${details}${cause ? ` Got an error: ${cause}` : ''}${source ? ` in: ${source}` : ''}`;
+    return new Error(message);
+};
 
-const websiteKeyMissingError = (cause: Error | undefined, source?: string) => new Error(withDetails("Each default blocked website must have a key!", cause, source));
-const duplicateWebsiteKeyError = (cause: Error | undefined, source?: string) => new Error(withDetails("You cannot default multiple websites with the same keys!", cause, source));
-const websiteUrlMissingError = (cause: Error | undefined, source?: string) => new Error(withDetails("Each default blocked website must have a url to block!", cause, source));
-const websiteUrlInvalid = (cause: Error | undefined, source?: string) => new Error(withDetails("Each blocked website must have a valid url.", cause, source));
+const websiteKeyMissingError = errorProducerWithPrefix("Each default blocked website must have a key!");
+const duplicateWebsiteKeyError = errorProducerWithPrefix("You cannot default multiple websites with the same keys!");
+const websiteUrlMissingError = errorProducerWithPrefix("Each default blocked website must have a url to block!");
+const websiteUrlInvalid = errorProducerWithPrefix("Each blocked website must have a valid url.");
 
 export const initialTimeBlockedWebsites = (): Failable<Website[]> => {
     return validatedTimeBlockedWebsites(websiteJson);
