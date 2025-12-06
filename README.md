@@ -35,7 +35,8 @@ Right now, the plugin works perfect for my uses cases. However, for the experien
     * [ ] Split up helpers.ts
 - [ ] Make the web pages cleaner and prettier
 - [x] Unit test everything
-- [ ] Consider a popup after the time expires.
+- [x] Consider a popup after the time expires.
+- [ ] Style the popup when time expires
 - [ ] Consider saving the current url when said time expires.
 - [x] Identify a more limited set of permissions
 - [ ] Remove webNavigation permission? I was using this before for to store desiredURL, depending on popup 

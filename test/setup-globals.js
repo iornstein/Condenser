@@ -6,6 +6,7 @@ global.chrome = {
         onAlarm: {}
     },
     action : {},
+    windows: {},
     declarativeNetRequest : {
         RuleActionType: {
             REDIRECT: "REDIRECT"
