@@ -1,7 +1,7 @@
-import {pickOneFrom, storeTimeToBlockAgain} from "./helpers";
-import {retrieveWebsite} from "./storage";
-import {unblockWebsite} from "./block";
-import {sendMessageToReBlockAfterMinutes} from "./message";
+import {pickOneFrom, storeTimeToBlockAgain} from "../helpers";
+import {retrieveWebsite} from "../storage";
+import {unblockWebsite} from "../block";
+import {sendMessageToReBlockAfterMinutes} from "../message";
 
 const urlSearchParams = new URLSearchParams(window.location.search);
 const websiteKey: string = urlSearchParams.get("website");
